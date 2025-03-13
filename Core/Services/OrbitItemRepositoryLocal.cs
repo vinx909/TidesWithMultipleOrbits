@@ -14,18 +14,88 @@ namespace Core.Services
 
         public OrbitItemRepositoryLocal()
         {
-            throw new NotImplementedException();
+            orbitItems = new();
         }
 
         public bool Add(OrbitItem item)
         {
+            bool idAlreadyExists = false;
+            bool orbitingIdExists = false;
 
-            throw new NotImplementedException();
+            if(item.OrbitingId == 0)
+            {
+                orbitingIdExists = true;
+            }
+
+            for (int i = 0; i < orbitItems.Count; i++)
+            {
+                idAlreadyExists = idAlreadyExists || orbitItems[i].Id == item.Id;
+                orbitingIdExists = orbitingIdExists || orbitItems[i].OrbitingId == item.OrbitingId;
+
+                if(idAlreadyExists && orbitingIdExists)
+                {
+                    break;
+                }
+            }
+
+            if (idAlreadyExists || !orbitingIdExists)
+            {
+                return false;
+            }
+
+            orbitItems.Add(item);
+            return true;
         }
 
         public bool Add(IEnumerable<OrbitItem> items)
         {
-            throw new NotImplementedException();
+            foreach (OrbitItem item in items)
+            {
+                bool idAlreadyExists = false;
+                bool orbitingIdExists = false;
+
+                if (item.OrbitingId == 0)
+                {
+                    orbitingIdExists = true;
+                }
+
+                foreach (OrbitItem otherItem in items)
+                {
+                    if(otherItem != item)
+                    {
+                        idAlreadyExists = idAlreadyExists || otherItem.Id == item.Id;
+                        orbitingIdExists = orbitingIdExists || otherItem.Id == item.OrbitingId;
+
+                        if (idAlreadyExists && orbitingIdExists)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < orbitItems.Count; i++)
+                {
+                    idAlreadyExists = idAlreadyExists || orbitItems[i].Id == item.Id;
+                    orbitingIdExists = orbitingIdExists || orbitItems[i].Id == item.OrbitingId;
+
+                    if (idAlreadyExists && orbitingIdExists)
+                    {
+                        break;
+                    }
+                }
+
+                if (idAlreadyExists || !orbitingIdExists)
+                {
+                    return false;
+                } 
+            }
+
+            foreach (OrbitItem item in items)
+            {
+                orbitItems.Add(item);
+            }
+
+            return true;
         }
 
         public bool Contains(int id)
@@ -65,7 +135,15 @@ namespace Core.Services
 
         public OrbitItem Get(int id)
         {
-            throw new NotImplementedException();
+            foreach (OrbitItem item in orbitItems)
+            {
+                if(item.Id == id)
+                {
+                    return item;
+                }
+            }
+
+            return null;
         }
 
         public IEnumerable<OrbitItem> GetAll()

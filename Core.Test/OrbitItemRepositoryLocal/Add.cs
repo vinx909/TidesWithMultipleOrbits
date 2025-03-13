@@ -179,30 +179,30 @@ namespace Core.Test.OrbitItemRepositoryLocal
         }
 
         [Theory]
-        [InlineData(0, 1, 3, 6)]
-        [InlineData(0, 1, 6, 3)]
-        [InlineData(0, 3, 1, 6)]
-        [InlineData(0, 3, 6, 1)]
-        [InlineData(0, 6, 1, 3)]
-        [InlineData(0, 6, 3, 1)]
-        [InlineData(1, 0, 3, 6)]
-        [InlineData(1, 0, 6, 3)]
-        [InlineData(1, 3, 0, 6)]
-        [InlineData(1, 3, 6, 0)]
-        [InlineData(1, 6, 0, 3)]
-        [InlineData(1, 6, 3, 0)]
-        [InlineData(3, 0, 1, 6)]
-        [InlineData(3, 0, 6, 1)]
-        [InlineData(3, 1, 0, 6)]
-        [InlineData(3, 1, 6, 0)]
-        [InlineData(3, 6, 0, 1)]
-        [InlineData(3, 6, 1, 0)]
-        [InlineData(6, 0, 1, 3)]
-        [InlineData(6, 0, 3, 1)]
-        [InlineData(6, 1, 0, 3)]
-        [InlineData(6, 1, 3, 0)]
-        [InlineData(6, 3, 0, 1)]
-        [InlineData(6, 3, 1, 0)]
+        [InlineData(0, 1, 3, 5)]
+        [InlineData(0, 1, 5, 3)]
+        [InlineData(0, 3, 1, 5)]
+        [InlineData(0, 3, 5, 1)]
+        [InlineData(0, 5, 1, 3)]
+        [InlineData(0, 5, 3, 1)]
+        [InlineData(1, 0, 3, 5)]
+        [InlineData(1, 0, 5, 3)]
+        [InlineData(1, 3, 0, 5)]
+        [InlineData(1, 3, 5, 0)]
+        [InlineData(1, 5, 0, 3)]
+        [InlineData(1, 5, 3, 0)]
+        [InlineData(3, 0, 1, 5)]
+        [InlineData(3, 0, 5, 1)]
+        [InlineData(3, 1, 0, 5)]
+        [InlineData(3, 1, 5, 0)]
+        [InlineData(3, 5, 0, 1)]
+        [InlineData(3, 5, 1, 0)]
+        [InlineData(5, 0, 1, 3)]
+        [InlineData(5, 0, 3, 1)]
+        [InlineData(5, 1, 0, 3)]
+        [InlineData(5, 1, 3, 0)]
+        [InlineData(5, 3, 0, 1)]
+        [InlineData(5, 3, 1, 0)]
         public void ReturnTrue_WhenAddingMultipleThatReferenceEachOtherInAnyOrder(int index1, int index2, int index3, int index4)
         {
             Entities.OrbitItem[] toAddList = { ContainedOrbitItems[index1], ContainedOrbitItems[index2], ContainedOrbitItems[index3], ContainedOrbitItems[index4] };
@@ -213,30 +213,30 @@ namespace Core.Test.OrbitItemRepositoryLocal
         }
 
         [Theory]
-        [InlineData(0, 1, 3, 6)]
-        [InlineData(0, 1, 6, 3)]
-        [InlineData(0, 3, 1, 6)]
-        [InlineData(0, 3, 6, 1)]
-        [InlineData(0, 6, 1, 3)]
-        [InlineData(0, 6, 3, 1)]
-        [InlineData(1, 0, 3, 6)]
-        [InlineData(1, 0, 6, 3)]
-        [InlineData(1, 3, 0, 6)]
-        [InlineData(1, 3, 6, 0)]
-        [InlineData(1, 6, 0, 3)]
-        [InlineData(1, 6, 3, 0)]
-        [InlineData(3, 0, 1, 6)]
-        [InlineData(3, 0, 6, 1)]
-        [InlineData(3, 1, 0, 6)]
-        [InlineData(3, 1, 6, 0)]
-        [InlineData(3, 6, 0, 1)]
-        [InlineData(3, 6, 1, 0)]
-        [InlineData(6, 0, 1, 3)]
-        [InlineData(6, 0, 3, 1)]
-        [InlineData(6, 1, 0, 3)]
-        [InlineData(6, 1, 3, 0)]
-        [InlineData(6, 3, 0, 1)]
-        [InlineData(6, 3, 1, 0)]
+        [InlineData(0, 1, 3, 5)]
+        [InlineData(0, 1, 5, 3)]
+        [InlineData(0, 3, 1, 5)]
+        [InlineData(0, 3, 5, 1)]
+        [InlineData(0, 5, 1, 3)]
+        [InlineData(0, 5, 3, 1)]
+        [InlineData(1, 0, 3, 5)]
+        [InlineData(1, 0, 5, 3)]
+        [InlineData(1, 3, 0, 5)]
+        [InlineData(1, 3, 5, 0)]
+        [InlineData(1, 5, 0, 3)]
+        [InlineData(1, 5, 3, 0)]
+        [InlineData(3, 0, 1, 5)]
+        [InlineData(3, 0, 5, 1)]
+        [InlineData(3, 1, 0, 5)]
+        [InlineData(3, 1, 5, 0)]
+        [InlineData(3, 5, 0, 1)]
+        [InlineData(3, 5, 1, 0)]
+        [InlineData(5, 0, 1, 3)]
+        [InlineData(5, 0, 3, 1)]
+        [InlineData(5, 1, 0, 3)]
+        [InlineData(5, 1, 3, 0)]
+        [InlineData(5, 3, 0, 1)]
+        [InlineData(5, 3, 1, 0)]
         public void GetReturnsItem_WhenAddingMultipleThatReferenceEachOtherInAnyOrder(int index1, int index2, int index3, int index4)
         {
             Entities.OrbitItem[] toAddList = { ContainedOrbitItems[index1], ContainedOrbitItems[index2], ContainedOrbitItems[index3], ContainedOrbitItems[index4] };
@@ -271,7 +271,35 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
             Entities.OrbitItem[] toAddList = { NotContainingNotOrbiterTwo, NotContainingOrbiterThree };
-            toAddList[0].Id = ContainingNotOrbiterOne.Id;
+            Entities.OrbitItem origional = ContainingNotOrbiterOne;
+            toAddList[0].Id = origional.Id;
+
+            sut.Add(toAddList);
+            Entities.OrbitItem result = sut.Get(toAddList[0].Id);
+
+            Assert.Equal(origional, result);
+        }
+
+        [Fact]
+        public void ReturnsFalse_WhenAddingMultipleWithSameId()
+        {
+            const int id = 40;
+            Entities.OrbitItem[] toAddList = { Copy(ContainingNotOrbiterOne), Copy(NotContainingNotOrbiterTwo) };
+            toAddList[0].Id = id;
+            toAddList[1].Id = id;
+
+            bool result = sut.Add(toAddList);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void GetReturnsNull_WhenAddingMultipleWithSameId()
+        {
+            const int id = 40;
+            Entities.OrbitItem[] toAddList = { Copy(ContainingNotOrbiterOne), Copy(NotContainingNotOrbiterTwo) };
+            toAddList[0].Id = id;
+            toAddList[1].Id = id;
             Entities.OrbitItem[] resultList = new Entities.OrbitItem[toAddList.Length];
 
             sut.Add(toAddList);
