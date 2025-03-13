@@ -38,5 +38,10 @@ namespace Core.Test
             ContainedOrbitItems = new List<Entities.OrbitItem>() { ContainingNotOrbiterOne, ContainingOrbiterOne, ContainingOrbiterTwo, ContainingOrbiterSubOne, ContainingOrbiterSubTwo, ContainingOrbiterSubSubOne };
             NotContainedOrbitItems = new List<Entities.OrbitItem>() { NotContainingNotOrbiterTwo, NotContainingOrbiterThree, NotContainingOrbiterSubThree, NotContainingOrbiterSubSubTwo };
         }
+
+        protected static Entities.OrbitItem Copy(Entities.OrbitItem item)
+        {
+            return new Entities.OrbitItem() { Id = item.Id, Name = item.Name, OrbitingId = item.OrbitingId, Mass = item.Mass, Radius = item.Radius, OrbitingDistance = item.OrbitingDistance, OrbitPeriod = item.OrbitPeriod };
+        }
     }
 }

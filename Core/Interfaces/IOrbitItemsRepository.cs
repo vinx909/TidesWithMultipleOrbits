@@ -127,6 +127,30 @@ namespace Core.Interfaces
         public IEnumerable<OrbitItem> GetAllOrbitersOf(int id, bool getSuborbiters);
 
         /// <summary>
+        /// returns the next available id
+        /// </summary>
+        /// <returns></returns>
+        public int GetAvailableId();
+
+        /// <summary>
+        /// returns the id of an item matching the given item with these values ignoring id and the OrbitingId
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns>returns the id of the item, or null if it doesn't exist</returns>
+        public int? GetIdOf(OrbitItem item)
+        {
+            return GetIdOf(item, false);
+        }
+
+        /// <summary>
+        /// returns the id of an item matching the given item with these values ignoring id, with or without checking the OrbitingId
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="checkOrbitingId"></param>
+        /// <returns>returns the id of the item, or null if it doesn't exist</returns>
+        public int? GetIdOf(OrbitItem item, bool checkOrbitingId);
+
+        /// <summary>
         /// updates the item that matches the id of the given item
         /// </summary>
         /// <param name="item"></param>

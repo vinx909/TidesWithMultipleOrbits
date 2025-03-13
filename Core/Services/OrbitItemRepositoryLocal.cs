@@ -10,8 +10,16 @@ namespace Core.Services
 {
     public class OrbitItemRepositoryLocal : IOrbitItemsRepository
     {
+        private readonly List<OrbitItem> orbitItems;
+
+        public OrbitItemRepositoryLocal()
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Add(OrbitItem item)
         {
+
             throw new NotImplementedException();
         }
 
@@ -66,6 +74,16 @@ namespace Core.Services
         }
 
         public IEnumerable<OrbitItem> GetAllOrbitersOf(int id, bool getSuborbiters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetAvailableId()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int? GetIdOf(OrbitItem item, bool checkOrbitingId)
         {
             throw new NotImplementedException();
         }
