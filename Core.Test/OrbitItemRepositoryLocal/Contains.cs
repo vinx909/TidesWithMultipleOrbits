@@ -11,7 +11,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         [Fact]
         public void Id_ReturnsFalse_IfEmpty()
         {
-            bool result = sut.Contains(ContainingNotOrbiterOne.Id);
+            bool result = sut.Contains(ContainingOrbiterOne.Id);
 
             Assert.False(result);
         }
@@ -21,7 +21,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
 
-            bool result = sut.Contains(ContainingNotOrbiterOne.Id);
+            bool result = sut.Contains(ContainingOrbiterOne.Id);
 
             Assert.True(result);
         }
@@ -39,7 +39,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         [Fact]
         public void Entity_WithoutBoolean_ReturnsFalse_IfEmpty()
         {
-            bool result = sut.Contains(ContainingNotOrbiterOne);
+            bool result = sut.Contains(ContainingOrbiterOne);
 
             Assert.False(result);
         }
@@ -49,7 +49,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
 
-            bool result = sut.Contains(ContainingNotOrbiterOne);
+            bool result = sut.Contains(ContainingOrbiterOne);
 
             Assert.True(result);
         }
@@ -58,7 +58,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithoutBoolean_ReturnsTrue_IfContainingIncorrectId()
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id + 2, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.Id = copy.Id + 2;
 
             bool result = sut.Contains(copy);
 
@@ -69,7 +70,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithoutBoolean_ReturnsFalse_IfContainingIncorrectName()
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name + " but incorrect", OrbitingId = ContainingNotOrbiterOne.OrbitingId, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.Name = copy.Name + " but incorrect";
 
             bool result = sut.Contains(copy);
 
@@ -80,7 +82,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithoutBoolean_ReturnsTrue_IfContainingIncorrectOrbitingId()
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId + 2, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.OrbitingId = copy.OrbitingId + 2;
 
             bool result = sut.Contains(copy);
 
@@ -91,7 +94,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithoutBoolean_ReturnsFalse_IfContainingIncorrectMass()
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId, Mass = ContainingNotOrbiterOne.Mass + 2, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.Mass = copy.Mass + 2;
 
             bool result = sut.Contains(copy);
 
@@ -102,7 +106,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithoutBoolean_ReturnsFalse_IfContainingIncorrectRadius()
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius + 2, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.Radius = copy.Radius + 2;
 
             bool result = sut.Contains(copy);
 
@@ -113,7 +118,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithoutBoolean_ReturnsFalse_IfContainingIncorrectOrbitingDistance()
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance + 2, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.OrbitingDistance = copy.OrbitingDistance + 2;
 
             bool result = sut.Contains(copy);
 
@@ -124,7 +130,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithoutBoolean_ReturnsFalse_IfContainingIncorrectOrbitPeriod()
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod + 2 };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.OrbitPeriod = copy.OrbitPeriod + 2;
 
             bool result = sut.Contains(copy);
 
@@ -146,7 +153,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         [InlineData(false)]
         public void Entity_WithBoolean_ReturnsFalse_IfEmpty(bool boolean)
         {
-            bool result = sut.Contains(ContainingNotOrbiterOne, boolean);
+            bool result = sut.Contains(ContainingOrbiterOne, boolean);
 
             Assert.False(result);
         }
@@ -158,7 +165,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
 
-            bool result = sut.Contains(ContainingNotOrbiterOne, boolean);
+            bool result = sut.Contains(ContainingOrbiterOne, boolean);
 
             Assert.True(result);
         }
@@ -169,7 +176,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithBoolean_ReturnsTrue_IfContainingIncorrectId(bool boolean)
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id + 2, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.Id = copy.Id + 2;
 
             bool result = sut.Contains(copy, boolean);
 
@@ -182,7 +190,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithBoolean_ReturnsFalse_IfContainingIncorrectName(bool boolean)
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name + " but incorrect", OrbitingId = ContainingNotOrbiterOne.OrbitingId, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.Name = copy.Name + " but incorrect";
 
             bool result = sut.Contains(copy, boolean);
 
@@ -193,7 +202,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithBoolean_ReturnsTrue_IfContainingIncorrectOrbitingId_CheckOrbitingIdFalse()
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId + 2, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.OrbitingId = copy.OrbitingId + 2;
 
             bool result = sut.Contains(copy);
 
@@ -204,7 +214,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithBoolean_ReturnsFalse_IfContainingIncorrectOrbitingId_CheckOrbitingIdTrue()
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId + 2, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.OrbitingId = copy.OrbitingId + 2;
 
             bool result = sut.Contains(copy, true);
 
@@ -217,7 +228,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithBoolean_ReturnsFalse_IfContainingIncorrectMass(bool boolean)
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId, Mass = ContainingNotOrbiterOne.Mass + 2, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.Mass = copy.Mass + 2;
 
             bool result = sut.Contains(copy, boolean);
 
@@ -230,7 +242,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithBoolean_ReturnsFalse_IfContainingIncorrectRadius(bool boolean)
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius + 2, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.Radius = copy.Radius + 2;
 
             bool result = sut.Contains(copy, boolean);
 
@@ -243,7 +256,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithBoolean_ReturnsFalse_IfContainingIncorrectOrbitingDistance(bool boolean)
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance + 2, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.OrbitingDistance = copy.OrbitingDistance + 2;
 
             bool result = sut.Contains(copy, boolean);
 
@@ -256,7 +270,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void Entity_WithBoolean_ReturnsFalse_IfContainingIncorrectOrbitPeriod(bool boolean)
         {
             Populate();
-            Entities.OrbitItem copy = new() { Id = ContainingNotOrbiterOne.Id, Name = ContainingNotOrbiterOne.Name, OrbitingId = ContainingNotOrbiterOne.OrbitingId, Mass = ContainingNotOrbiterOne.Mass, Radius = ContainingNotOrbiterOne.Radius, OrbitingDistance = ContainingNotOrbiterOne.OrbitingDistance, OrbitPeriod = ContainingNotOrbiterOne.OrbitPeriod + 2 };
+            Entities.OrbitItem copy = Copy(ContainingOrbiterOne);
+            copy.OrbitPeriod = copy.OrbitPeriod + 2;
 
             bool result = sut.Contains(copy, boolean);
 
