@@ -63,11 +63,11 @@ namespace Core.Test.OrbitItem
         }
 
         [Fact]
-        public void DefaultOrbitDistanceisOne()
+        public void DefaultOrbitDistanceisZero()
         {
             Entities.OrbitItem sut = new();
 
-            Assert.Equal(1, sut.OrbitingDistance);
+            Assert.Equal(0, sut.OrbitingDistance);
         }
 
         [Fact]

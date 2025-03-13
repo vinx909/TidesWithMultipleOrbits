@@ -30,11 +30,23 @@ namespace Core.Test.OrbitItem
         }
 
         [Fact]
+        public void CanNotBeChangedToSameNumberAsId()
+        {
+            int origionalId = sut.OrbitingId;
+            const int goalId = 5;
+            sut.Id = goalId;
+
+            sut.OrbitingId = goalId;
+
+            Assert.Equal(origionalId, sut.OrbitingId);
+        }
+
+        [Fact]
         public void CanBeChangedToZero()
         {
             const int goalId = 0;
 
-            sut.OrbitingId = 1;
+            sut.OrbitingId = 2;
             sut.OrbitingId = goalId;
 
             Assert.Equal(goalId, sut.OrbitingId);
@@ -45,7 +57,7 @@ namespace Core.Test.OrbitItem
         {
             const int goalId = 0;
 
-            sut.OrbitingId = 1;
+            sut.OrbitingId = 2;
             sut.OrbitingDistance = 10;
             sut.OrbitingId = goalId;
 
@@ -57,11 +69,21 @@ namespace Core.Test.OrbitItem
         {
             const int goalId = 0;
 
-            sut.OrbitingId = 1;
+            sut.OrbitingId = 2;
             sut.OrbitPeriod = 10;
             sut.OrbitingId = goalId;
 
             Assert.Equal(goalId, sut.OrbitPeriod);
+        }
+
+        [Fact]
+        public void WhenChangedFromZeroOrbitDistanceIsSetToOne()
+        {
+            sut.OrbitingId = 0;
+            sut.OrbitPeriod = 0;
+            sut.OrbitingId = 2;
+
+            Assert.Equal(1, sut.OrbitingDistance);
         }
     }
 }

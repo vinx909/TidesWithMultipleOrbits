@@ -12,6 +12,7 @@ namespace Core.Test.OrbitItem
         public void CanBeChangedToPossitiveInterger()
         {
             const int goalValue = 5;
+            sut.OrbitingId = 2;
 
             sut.OrbitPeriod = goalValue;
 
@@ -21,6 +22,7 @@ namespace Core.Test.OrbitItem
         [Fact]
         public void CanNotBeChangedToNegativeInterger()
         {
+            sut.OrbitingId = 2;
             int origionalValue = sut.OrbitPeriod;
             const int goalValue = -5;
 
@@ -33,6 +35,7 @@ namespace Core.Test.OrbitItem
         public void CanBeChangedToZero()
         {
             const int goalValue = 0;
+            sut.OrbitingId = 2;
 
             sut.OrbitPeriod = 1;
             sut.OrbitPeriod = goalValue;
