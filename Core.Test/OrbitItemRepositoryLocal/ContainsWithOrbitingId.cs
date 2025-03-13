@@ -42,7 +42,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
 
-            int? result = sut.ContainsWithOrbitingId(ContainingOrbiterSubOne.Id);
+            int? result = sut.ContainsWithOrbitingId(NotContainingOrbiterSubThree.Id);
 
             Assert.Null(result);
         }
@@ -81,7 +81,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
             Entities.OrbitItem target = ContainingOrbiterSubOne;
-            Entities.OrbitItem copy = new() { Id = target.Id + 2, Name = target.Name, OrbitingId = target.OrbitingId, Mass = target.Mass, Radius = target.Radius, OrbitingDistance = target.OrbitingDistance, OrbitPeriod = target.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(target);
+            copy.Id = copy.Id + 2;
 
             int? result = sut.ContainsWithOrbitingId(copy);
 
@@ -93,7 +94,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
             Entities.OrbitItem target = ContainingOrbiterSubOne;
-            Entities.OrbitItem copy = new() { Id = target.Id + 2, Name = target.Name, OrbitingId = target.OrbitingId, Mass = target.Mass, Radius = target.Radius, OrbitingDistance = target.OrbitingDistance, OrbitPeriod = target.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(target);
+            copy.Id = copy.Id + 2;
 
             int? result = sut.ContainsWithOrbitingId(copy);
 
@@ -105,7 +107,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
             Entities.OrbitItem target = ContainingOrbiterSubOne;
-            Entities.OrbitItem copy = new() { Id = target.Id, Name = target.Name + " but incorrect", OrbitingId = target.OrbitingId, Mass = target.Mass, Radius = target.Radius, OrbitingDistance = target.OrbitingDistance, OrbitPeriod = target.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(target);
+            copy.Name = copy.Name + " but incorrect";
 
             int? result = sut.ContainsWithOrbitingId(copy);
 
@@ -117,7 +120,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
             Entities.OrbitItem target = ContainingOrbiterSubOne;
-            Entities.OrbitItem copy = new() { Id = target.Id, Name = target.Name, OrbitingId = target.OrbitingId + 2, Mass = target.Mass, Radius = target.Radius, OrbitingDistance = target.OrbitingDistance, OrbitPeriod = target.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(target);
+            copy.OrbitingId = copy.OrbitingId + 2;
 
             int? result = sut.ContainsWithOrbitingId(copy);
 
@@ -129,7 +133,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
             Entities.OrbitItem target = ContainingOrbiterSubOne;
-            Entities.OrbitItem copy = new() { Id = target.Id, Name = target.Name, OrbitingId = target.OrbitingId + 2, Mass = target.Mass, Radius = target.Radius, OrbitingDistance = target.OrbitingDistance, OrbitPeriod = target.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(target);
+            copy.OrbitingId = copy.OrbitingId + 2;
 
             int? result = sut.ContainsWithOrbitingId(copy);
 
@@ -141,7 +146,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
             Entities.OrbitItem target = ContainingOrbiterSubOne;
-            Entities.OrbitItem copy = new() { Id = target.Id, Name = target.Name, OrbitingId = target.OrbitingId, Mass = target.Mass + 2, Radius = target.Radius, OrbitingDistance = target.OrbitingDistance, OrbitPeriod = target.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(target);
+            copy.Mass = copy.Mass + 2;
 
             int? result = sut.ContainsWithOrbitingId(copy);
 
@@ -153,7 +159,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
             Entities.OrbitItem target = ContainingOrbiterSubOne;
-            Entities.OrbitItem copy = new() { Id = target.Id, Name = target.Name, OrbitingId = target.OrbitingId, Mass = target.Mass, Radius = target.Radius + 2, OrbitingDistance = target.OrbitingDistance, OrbitPeriod = target.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(target);
+            copy.Radius = copy.Radius + 2;
 
             int? result = sut.ContainsWithOrbitingId(copy);
 
@@ -165,7 +172,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
             Entities.OrbitItem target = ContainingOrbiterSubOne;
-            Entities.OrbitItem copy = new() { Id = target.Id, Name = target.Name, OrbitingId = target.OrbitingId, Mass = target.Mass, Radius = target.Radius, OrbitingDistance = target.OrbitingDistance + 2, OrbitPeriod = target.OrbitPeriod };
+            Entities.OrbitItem copy = Copy(target);
+            copy.OrbitingDistance = copy.OrbitingDistance + 2;
 
             int? result = sut.ContainsWithOrbitingId(copy);
 
@@ -177,7 +185,8 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
             Entities.OrbitItem target = ContainingOrbiterSubOne;
-            Entities.OrbitItem copy = new() { Id = target.Id, Name = target.Name, OrbitingId = target.OrbitingId, Mass = target.Mass, Radius = target.Radius, OrbitingDistance = target.OrbitingDistance, OrbitPeriod = target.OrbitPeriod + 2 };
+            Entities.OrbitItem copy = Copy(target);
+            copy.OrbitPeriod = copy.OrbitPeriod + 2;
 
             int? result = sut.ContainsWithOrbitingId(copy);
 

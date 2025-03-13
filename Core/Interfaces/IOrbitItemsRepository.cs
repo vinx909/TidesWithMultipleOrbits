@@ -58,9 +58,9 @@ namespace Core.Interfaces
         /// <summary>
         /// returns the OrbitingId of an item matching an item with these values ignoring id, or null if such an item does not exist
         /// </summary>
-        /// <param name="orbitItem"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
-        public int? ContainsWithOrbitingId(OrbitItem orbitItem);
+        public int? ContainsWithOrbitingId(OrbitItem item);
 
         /// <summary>
         /// deletes the item with the given id

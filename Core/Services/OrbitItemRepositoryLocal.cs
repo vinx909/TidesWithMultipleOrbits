@@ -131,12 +131,32 @@ namespace Core.Services
 
         public int? ContainsWithOrbitingId(int id)
         {
-            throw new NotImplementedException();
+            foreach (OrbitItem item in orbitItems)
+            {
+                if (item.Id == id)
+                {
+                    return item.OrbitingId;
+                }
+            }
+            return null;
         }
 
-        public int? ContainsWithOrbitingId(OrbitItem orbitItem)
+        public int? ContainsWithOrbitingId(OrbitItem item)
         {
-            throw new NotImplementedException();
+            foreach (var orbitItem in orbitItems)
+            {
+                if (
+                    orbitItem.Name.Equals(item.Name) &&
+                    orbitItem.Mass == item.Mass &&
+                    orbitItem.Radius == item.Radius &&
+                    orbitItem.OrbitingDistance == item.OrbitingDistance &&
+                    orbitItem.OrbitPeriod == item.OrbitPeriod)
+                {
+                    return orbitItem.OrbitingId;
+                }
+            }
+
+            return null;
         }
 
         public bool Delete(int id, bool update)
