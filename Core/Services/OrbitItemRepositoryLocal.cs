@@ -161,17 +161,52 @@ namespace Core.Services
 
         public bool Delete(int id, bool update)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool Delete(OrbitItem item)
-        {
-            throw new NotImplementedException();
+            if (Contains(id))
+            {
+                return DeleteAction(Get(id), update);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public bool Delete(OrbitItem item, bool update)
         {
-            throw new NotImplementedException();
+            if(Contains(item, true))
+            {
+                return Delete(item.Id, update);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool DeleteAction(OrbitItem item, bool update)
+        {
+            IEnumerable<OrbitItem> orbiters = GetAllOrbitersOf(item.Id, false);
+            if (orbiters.Any())
+            {
+                if (update)
+                {
+                    foreach (OrbitItem orbiter in orbiters)
+                    {
+                        orbiter.OrbitingId = 0;
+                    }
+                    if (!Update(orbiters))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            orbitItems.Remove(item);
+            return true;
         }
 
         public OrbitItem Get(int id)
@@ -189,32 +224,194 @@ namespace Core.Services
 
         public IEnumerable<OrbitItem> GetAll()
         {
-            throw new NotImplementedException();
+            return new List<OrbitItem>(orbitItems);
         }
 
         public IEnumerable<OrbitItem> GetAllOrbitersOf(int id, bool getSuborbiters)
         {
-            throw new NotImplementedException();
+            List<OrbitItem> toReturn = new();
+            
+            foreach (OrbitItem item in orbitItems)
+            {
+                if(item.OrbitingId == id)
+                {
+                    toReturn.Add(item);
+                }
+            }
+
+            if( getSuborbiters)
+            {
+                for (int i = 0; i < toReturn.Count; i++)
+                {
+                    toReturn.AddRange(GetAllOrbitersOf(toReturn[i].Id, true));
+                }
+            }
+
+            return toReturn;
         }
 
         public int GetAvailableId()
         {
-            throw new NotImplementedException();
+            int id = 0;
+            bool idFree = false;
+
+            while (!idFree)
+            {
+                id++;
+                idFree = true;
+                foreach (OrbitItem item in orbitItems)
+                {
+                    if (item.Id == id)
+                    {
+                        idFree = false;
+                        break;
+                    }
+                }
+            }
+
+            return id;
         }
 
         public int? GetIdOf(OrbitItem item, bool checkOrbitingId)
         {
-            throw new NotImplementedException();
+            foreach (var orbitItem in orbitItems)
+            {
+                if (
+                    orbitItem.Name.Equals(item.Name) &&
+                    (!checkOrbitingId || orbitItem.OrbitingId == item.OrbitingId) &&
+                    orbitItem.Mass == item.Mass &&
+                    orbitItem.Radius == item.Radius &&
+                    orbitItem.OrbitingDistance == item.OrbitingDistance &&
+                    orbitItem.OrbitPeriod == item.OrbitPeriod)
+                {
+                    return orbitItem.Id;
+                }
+            }
+
+            return null;
         }
 
         public bool Update(OrbitItem item)
         {
-            throw new NotImplementedException();
+            //Id Exists
+            if (!Contains(item.Id))
+            {
+                return false;
+            }
+
+            //OrbitingId is an Id that exists
+            if (item.OrbitingId != 0 && Get(item.OrbitingId) == null)
+            {
+                return false;
+            }
+
+            // make sure there's no infinite orbit loop
+            if (item.OrbitingId != 0)
+            {
+                if(InifiniteLoops(item.OrbitingId, item.Id))
+                {
+                    return false;
+                }
+            }
+
+            DoUpdate(item);
+            return true;
         }
 
         public bool Update(IEnumerable<OrbitItem> items)
         {
-            throw new NotImplementedException();
+            foreach (OrbitItem item in items)
+            {
+                //Id Exists
+                if (!Contains(item.Id))
+                {
+                    return false;
+                }
+
+                //OrbitingId is an Id that exists
+                if (item.OrbitingId!=0 && Get(item.OrbitingId) == null)
+                {
+                    return false;
+                }
+
+                // make sure there's no infinite orbit loop
+                if (item.OrbitingId != 0)
+                {
+                    if (InifiniteLoops(items, item.OrbitingId, item.Id))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            foreach (OrbitItem item in items)
+            {
+                DoUpdate(item); 
+            }
+            return true;
+        }
+
+        private void DoUpdate(OrbitItem item)
+        {
+            for (int i = 0; i < orbitItems.Count; i++)
+            {
+                if(orbitItems[i].Id == item.Id)
+                {
+                    orbitItems[i].Name = item.Name;
+                    orbitItems[i].OrbitingId = item.OrbitingId;
+                    orbitItems[i].Mass = item.Mass;
+                    orbitItems[i].Radius = item.Radius;
+                    orbitItems[i].OrbitingDistance = item.OrbitingDistance;
+                    orbitItems[i].OrbitPeriod = item.OrbitPeriod;
+                    return;
+                }
+            }
+        }
+
+        private bool InifiniteLoops(int currentId, int firstId)
+        {
+            OrbitItem toCheck = Get(currentId);
+            if(toCheck.OrbitingId == firstId)
+            {
+                return true;
+            }
+            else if(toCheck.OrbitingId == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return InifiniteLoops(toCheck.OrbitingId, firstId);
+            }
+        }
+
+        private bool InifiniteLoops(IEnumerable<OrbitItem> Updated, int currentId, int firstId)
+        {
+            OrbitItem toCheck = null;
+            foreach (OrbitItem item in Updated)
+            {
+                if (item.Id == currentId)
+                {
+                    toCheck = item; break;
+                }
+            }
+            if (toCheck == null)
+            {
+                toCheck = Get(currentId);
+            }
+
+            if (toCheck.OrbitingId == firstId)
+            {
+                return true;
+            }
+            else if (toCheck.OrbitingId == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return InifiniteLoops(toCheck.OrbitingId, firstId);
+            }
         }
     }
 }

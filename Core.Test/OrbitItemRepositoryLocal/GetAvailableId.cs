@@ -9,22 +9,22 @@ namespace Core.Test.OrbitItemRepositoryLocal
     public class GetAvailableId : OrbitItemRepositoryLocalTestBase
     {
         [Fact]
-        public void ReturnsZero_WhenEmpty()
+        public void ReturnsOne_WhenEmpty()
         {
             int result = sut.GetAvailableId();
 
-            Assert.Equal(0, result);
+            Assert.Equal(1, result);
         }
 
         [Fact]
         public void ReturnsExpededNumber_WhenFilled()
         {
             Populate();
-            int expected = ContainedOrbitItems.Count;
+            int expected = ContainedOrbitItems.Count+1;
 
             int result = sut.GetAvailableId();
 
-            Assert.Equal(0, result);
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             int result = sut.GetAvailableId();
 
-            Assert.Equal(0, result);
+            Assert.Equal(expected, result);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         [Fact]
         public void WithoutBool_ReturnsNull_WhenEmpty()
         {
-            int? result = sut.GetIdOf(ContainingNotOrbiterOne);
+            int? result = sut.GetIdOf(ContainingOrbiterOne);
 
             Assert.Null(result);
         }
@@ -21,7 +21,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         [InlineData(false)]
         public void WithBool_ReturnsNull_WhenEmpty(bool boolean)
         {
-            int? result = sut.GetIdOf(ContainingNotOrbiterOne, boolean);
+            int? result = sut.GetIdOf(ContainingOrbiterOne, boolean);
 
             Assert.Null(result);
         }
@@ -31,7 +31,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
 
-            int? result = sut.GetIdOf(ContainingNotOrbiterOne);
+            int? result = sut.GetIdOf(ContainingOrbiterOne);
 
             Assert.NotNull(result);
         }
@@ -43,7 +43,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         {
             Populate();
 
-            int? result = sut.GetIdOf(ContainingNotOrbiterOne, boolean);
+            int? result = sut.GetIdOf(ContainingOrbiterOne, boolean);
 
             Assert.NotNull(result);
         }
@@ -52,7 +52,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void WithoutBool_ReturnsCorrectId_WhenFilled()
         {
             Populate();
-            Entities.OrbitItem target = ContainingNotOrbiterOne;
+            Entities.OrbitItem target = ContainingOrbiterOne;
 
             int? result = sut.GetIdOf(target);
 
@@ -65,7 +65,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void WithBool_ReturnsCorrectId_WhenFilled(bool boolean)
         {
             Populate();
-            Entities.OrbitItem target = ContainingNotOrbiterOne;
+            Entities.OrbitItem target = ContainingOrbiterOne;
 
             int? result = sut.GetIdOf(target, boolean);
 
@@ -102,7 +102,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void WithoutBool_ReturnsCorrectId_WithIncorrectId()
         {
             Populate();
-            Entities.OrbitItem target = ContainingNotOrbiterOne;
+            Entities.OrbitItem target = ContainingOrbiterOne;
             var copy = Copy(target);
             copy.Id = copy.Id + 10;
 
@@ -117,7 +117,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void WithBool_ReturnsCorrectId_WithIncorrectId(bool boolean)
         {
             Populate();
-            Entities.OrbitItem target = ContainingNotOrbiterOne;
+            Entities.OrbitItem target = ContainingOrbiterOne;
             var copy = Copy(target);
             copy.Id = copy.Id + 10;
 
@@ -192,7 +192,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void WithoutBool_ReturnsCorrectId_WithIncorrectOrbitingId()
         {
             Populate();
-            Entities.OrbitItem target = ContainingNotOrbiterOne;
+            Entities.OrbitItem target = ContainingOrbiterOne;
             var copy = Copy(target);
             copy.OrbitingId = copy.OrbitingId + 10;
 
@@ -205,7 +205,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         public void WithBool_ReturnsCorrectId_WithIncorrectOrbitingId_CheckOrbitingIdFalse()
         {
             Populate();
-            Entities.OrbitItem target = ContainingNotOrbiterOne;
+            Entities.OrbitItem target = ContainingOrbiterOne;
             var copy = Copy(target);
             copy.OrbitingId = copy.OrbitingId + 10;
 

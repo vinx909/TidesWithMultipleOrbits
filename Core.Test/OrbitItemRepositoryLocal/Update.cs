@@ -35,7 +35,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             bool result = sut.Update(updateItem);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             bool result = sut.Update(toUpdate);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -104,7 +104,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             bool result = sut.Update(updateItem);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -117,7 +117,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             bool result = sut.Update(toUpdate);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -173,7 +173,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             bool result = sut.Update(updateItem);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -186,7 +186,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             bool result = sut.Update(toUpdate);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -242,7 +242,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             bool result = sut.Update(updateItem);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -255,7 +255,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             bool result = sut.Update(toUpdate);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -311,7 +311,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             bool result = sut.Update(updateItem);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -324,7 +324,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             bool result = sut.Update(toUpdate);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -380,7 +380,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             bool result = sut.Update(updateItem);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -393,7 +393,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
 
             bool result = sut.Update(toUpdate);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]

@@ -85,7 +85,10 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="item"></param>
         /// <returns>returns true if the items were deleted or false if none were</returns>
-        public bool Delete(OrbitItem item);
+        public bool Delete(OrbitItem item)
+        {
+            return Delete(item, false);
+        }
 
         /// <summary>
         /// deletes an item that exactly matches the given item
