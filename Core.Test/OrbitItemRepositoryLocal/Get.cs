@@ -9,7 +9,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
     public class Get : OrbitItemRepositoryLocalTestBase
     {
         [Fact]
-        public void ReturnsNullIfEmpty()
+        public void ReturnsNull_IfEmpty()
         {
             Entities.OrbitItem result = sut.Get(ContainingNotOrbiterOne.Id);
 
@@ -17,7 +17,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         }
 
         [Fact]
-        public void ReturnsNotNullIfContaining()
+        public void ReturnsNotNull_IfContaining()
         {
             Populate();
 
@@ -27,7 +27,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         }
 
         [Fact]
-        public void ReturnsCorrectItemIfContaining()
+        public void ReturnsCorrectItem_IfContaining()
         {
             Populate();
             Entities.OrbitItem goal = ContainingNotOrbiterOne;
@@ -38,7 +38,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         }
 
         [Fact]
-        public void ReturnsNullIfNotContainingWhenFilled()
+        public void ReturnsNull_IfNotContainingWhenFilled()
         {
             Populate();
 

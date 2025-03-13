@@ -39,5 +39,29 @@ namespace Core.Test.OrbitItem
 
             Assert.Equal(goalId, sut.OrbitingId);
         }
+
+        [Fact]
+        public void WhenSetToZeroOrbitingDistanceIsSetToZero()
+        {
+            const int goalId = 0;
+
+            sut.OrbitingId = 1;
+            sut.OrbitingDistance = 10;
+            sut.OrbitingId = goalId;
+
+            Assert.Equal(goalId, sut.OrbitingDistance);
+        }
+
+        [Fact]
+        public void WhenSetToZeroOrbitPeriodIsSetToZero()
+        {
+            const int goalId = 0;
+
+            sut.OrbitingId = 1;
+            sut.OrbitPeriod = 10;
+            sut.OrbitingId = goalId;
+
+            Assert.Equal(goalId, sut.OrbitPeriod);
+        }
     }
 }

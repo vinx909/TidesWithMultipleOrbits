@@ -12,7 +12,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
     {
         private static readonly Exception failedToPopulateException = new Exception("failed to add items with the method Add(IEnumerable<OrbitItem>) making the running of this test impossible");
 
-        protected IObitItemsRepository sut;
+        protected IOrbitItemsRepository sut;
 
         protected OrbitItemRepositoryLocalTestBase()
         {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Core.Services
 {
-    public class OrbitItemRepositoryLocal : IObitItemsRepository
+    public class OrbitItemRepositoryLocal : IOrbitItemsRepository
     {
         public bool Add(OrbitItem item)
         {
@@ -25,7 +25,12 @@ namespace Core.Services
             throw new NotImplementedException();
         }
 
-        public bool Contains(OrbitItem item)
+        public bool Contains(OrbitItem item, bool checkOrbitingId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int? ContainsWithOrbitingId(int id)
         {
             throw new NotImplementedException();
         }
@@ -35,12 +40,17 @@ namespace Core.Services
             throw new NotImplementedException();
         }
 
-        public bool Delete(int id)
+        public bool Delete(int id, bool update)
         {
             throw new NotImplementedException();
         }
 
         public bool Delete(OrbitItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Delete(OrbitItem item, bool update)
         {
             throw new NotImplementedException();
         }

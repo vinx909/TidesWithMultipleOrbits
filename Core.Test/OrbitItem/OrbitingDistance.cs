@@ -39,5 +39,16 @@ namespace Core.Test.OrbitItem
 
             Assert.Equal(origionalValue, sut.OrbitingDistance);
         }
+
+        [Fact]
+        public void CanNotBeChangedFromZeroWhenOrbitingIdZero()
+        {
+            const int goalValue = 5;
+
+            sut.OrbitingId = 0;
+            sut.OrbitingDistance = goalValue;
+
+            Assert.Equal(0, sut.OrbitingDistance);
+        }
     }
 }
