@@ -32,7 +32,17 @@ namespace Core.Test.OrbitItemRepositoryLocal
             {
                 throw failedToPopulateException;
             }
-            
+        }
+
+        protected void IsSameOrbitItem(Entities.OrbitItem expected,  Entities.OrbitItem actual)
+        {
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.OrbitingId, actual.OrbitingId);
+            Assert.Equal(expected.Mass, actual.Mass);
+            Assert.Equal(expected.Radius, actual.Radius);
+            Assert.Equal(expected.OrbitingDistance, actual.OrbitingDistance);
+            Assert.Equal(expected.OrbitPeriod, actual.OrbitPeriod);
         }
     }
 }

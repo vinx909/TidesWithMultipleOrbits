@@ -632,5 +632,217 @@ namespace Core.Test.OrbitItemRepositoryLocal
             Assert.Equal(toUpdate[0].OrbitingId, resultOne.OrbitingId);
             Assert.Equal(toUpdate[1].OrbitingId, resultTwo.OrbitingId);
         }
+
+        [Fact]
+        public void ReturnTrue_WhenUpdatingToWhatItIs()
+        {
+            Populate();
+
+            bool result = sut.Update(ContainingNotOrbiterOne);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void GetReturnsSame_WhenUpdatingToWhatItIs()
+        {
+            Populate();
+            Entities.OrbitItem target = ContainingNotOrbiterOne;
+
+            sut.Update(target);
+            var result = sut.Get(target.Id);
+
+            IsSameOrbitItem(target, result);
+        }
+
+        [Fact]
+        public void ReturnTrue_WhenUpdatingToWhatItIs_IEnumerable()
+        {
+            Populate();
+
+            bool result = sut.Update([ContainingNotOrbiterOne]);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void GetReturnsSame_WhenUpdatingToWhatItIs_IEnumerable()
+        {
+            Populate();
+            Entities.OrbitItem target = ContainingNotOrbiterOne;
+
+            sut.Update([target]);
+            var result = sut.Get(target.Id);
+
+            IsSameOrbitItem(target, result);
+        }
+
+        [Fact]
+        public void ReturnFalse_WhenUpdatingToHaveValuesOfAnotherEntityOtherThenId()
+        {
+            Populate();
+            var origional = ContainingOrbiterOne;
+            var mirrored = ContainingOrbiterTwo;
+            var copy = Copy(mirrored);
+            copy.Id = origional.Id;
+
+            bool result = sut.Update(copy);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void ReturnOrigional_WhenUpdatingToHaveValuesOfAnotherEntityOtherThenId()
+        {
+            Populate();
+            var origional = Copy(ContainingOrbiterOne);
+            var mirrored = ContainingOrbiterTwo;
+            var copy = Copy(mirrored);
+            copy.Id = origional.Id;
+
+            sut.Update(copy);
+            var result = sut.Get(origional.Id);
+
+            IsSameOrbitItem(origional, result);
+        }
+
+        [Fact]
+        public void ReturnFalse_WhenUpdatingToHaveValuesOfAnotherEntityOtherThenId_IEnumerable()
+        {
+            Populate();
+            var mirrored = ContainingOrbiterTwo;
+            var copy = Copy(mirrored);
+            copy.Id = ContainingOrbiterOne.Id;
+
+            bool result = sut.Update([copy]);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void ReturnOrigional_WhenUpdatingToHaveValuesOfAnotherEntityOtherThenId_IEnumerable()
+        {
+            Populate();
+            var origional = Copy(ContainingOrbiterOne);
+            var mirrored = ContainingOrbiterTwo;
+            var copy = Copy(mirrored);
+            copy.Id = origional.Id;
+
+            sut.Update(copy);
+            var result = sut.Get(origional.Id);
+
+            IsSameOrbitItem(origional, result);
+        }
+
+        [Fact]
+        public void ReturnFalse_WhenUpdatingToHaveValuesOfAnotherEntityOtherThenIdAndOrbitingId()
+        {
+            Populate();
+            var origional = ContainingOrbiterOne;
+            var mirrored = ContainingOrbiterTwo;
+            var copy = Copy(mirrored);
+            copy.Id = origional.Id;
+            copy.OrbitingId = origional.OrbitingId;
+
+            bool result = sut.Update(copy);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void ReturnOrigional_WhenUpdatingToHaveValuesOfAnotherEntityOtherThenIdAndOrbitingId()
+        {
+            Populate();
+            var origional = Copy(ContainingOrbiterOne);
+            var mirrored = ContainingOrbiterTwo;
+            var copy = Copy(mirrored);
+            copy.Id = origional.Id;
+            copy.OrbitingId = origional.OrbitingId;
+
+            sut.Update(copy);
+            var result = sut.Get(origional.Id);
+
+            IsSameOrbitItem(origional, result);
+        }
+
+        [Fact]
+        public void ReturnFalse_WhenUpdatingToHaveValuesOfAnotherEntityOtherThenIdAndOrbitingId_IEnumerable()
+        {
+            Populate();
+            var mirrored = ContainingOrbiterTwo;
+            var copy = Copy(mirrored);
+            copy.Id = ContainingOrbiterOne.Id;
+            copy.OrbitingId = mirrored.OrbitingId;
+
+            bool result = sut.Update([copy]);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void ReturnOrigional_WhenUpdatingToHaveValuesOfAnotherEntityOtherThenIdAndOrbitingId_IEnumerable()
+        {
+            Populate();
+            var origional = Copy(ContainingOrbiterOne);
+            var mirrored = ContainingOrbiterTwo;
+            var copy = Copy(mirrored);
+            copy.Id = origional.Id;
+            copy.OrbitingId = origional.OrbitingId;
+
+            sut.Update(copy);
+            var result = sut.Get(origional.Id);
+
+            IsSameOrbitItem(origional, result);
+        }
+
+        [Fact]
+        public void ReturnFalse_WhenUpdatingToHaveValuesOfEachotherThenIdAndOrbitingId()
+        {
+            Populate();
+            var copyOne = Copy(ContainingOrbiterOne);
+            var copyTwo = Copy(ContainingOrbiterTwo);
+            copyOne.Name = copyTwo.Name;
+            copyTwo.OrbitingId = copyOne.OrbitingId;
+            copyOne.Mass = copyTwo.Mass;
+            copyTwo.Radius = copyOne.Radius;
+            copyOne.OrbitingDistance = copyTwo.OrbitingDistance;
+            copyTwo.OrbitPeriod = copyOne.OrbitPeriod;
+
+            bool result = sut.Update([copyOne, copyTwo]);
+
+            Assert.False(result);
+        }
+
+        [Theory]
+        [InlineData(2)]
+        [InlineData(3)]
+        public void ReturnOrigionals_WhenUpdatingToHaveValuesOfEachotherThenIdAndOrbitingId(int id)
+        {
+            Populate();
+            var copyOne = Copy(ContainingOrbiterOne);
+            var copyTwo = Copy(ContainingOrbiterTwo);
+            copyOne.Name = copyTwo.Name;
+            copyTwo.OrbitingId = copyOne.OrbitingId;
+            copyOne.Mass = copyTwo.Mass;
+            copyTwo.Radius = copyOne.Radius;
+            copyOne.OrbitingDistance = copyTwo.OrbitingDistance;
+            copyTwo.OrbitPeriod = copyOne.OrbitPeriod;
+
+            sut.Update([copyOne, copyTwo]);
+            var result = sut.Get(id);
+
+            if (id == 2 && ContainingOrbiterOne.Id == 2)
+            {
+                IsSameOrbitItem(ContainingOrbiterOne, result);
+            }
+            else if (id == 3 && ContainingOrbiterTwo.Id == 3)
+            {
+                IsSameOrbitItem(ContainingOrbiterTwo, result);
+            }
+            else
+            {
+                throw new InvalidOperationException("this means that the testing data has been altered, which in turn means that the tests need to be updated");
+            }
+        }
     }
 }

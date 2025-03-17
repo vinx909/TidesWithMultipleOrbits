@@ -93,5 +93,7 @@ namespace Core.Services
         {
             throw new NotImplementedException();
         }
+
+        public class NotInGivenRangeException : Exception;
     }
 }

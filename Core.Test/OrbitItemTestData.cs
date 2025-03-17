@@ -8,7 +8,7 @@ namespace Core.Test
 {
     public abstract class OrbitItemTestData
     {
-        protected Entities.OrbitItem ContainingNotOrbiterOne = new() { Id = 1, Name = "star one", OrbitingId = 0, Mass = 5000, Radius = 1000 };
+        protected Entities.OrbitItem ContainingNotOrbiterOne;
         protected Entities.OrbitItem ContainingOrbiterOne;
         protected Entities.OrbitItem ContainingOrbiterTwo;
         protected Entities.OrbitItem ContainingOrbiterSubOne;
