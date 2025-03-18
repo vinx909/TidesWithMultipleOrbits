@@ -38,7 +38,7 @@ namespace Core.Services
                 }
             }
 
-            if (idAlreadyExists || !orbitingIdExists)
+            if (idAlreadyExists || !orbitingIdExists||Contains(item, false))
             {
                 return false;
             }
@@ -70,6 +70,11 @@ namespace Core.Services
                         {
                             break;
                         }
+
+                        if (item.Name.Equals(otherItem.Name) && item.Mass == otherItem.Mass && item.Radius == otherItem.Radius && item.OrbitingDistance == otherItem.OrbitingDistance && item.OrbitPeriod == otherItem.OrbitPeriod)
+                        {
+                            return false;
+                        }
                     }
                 }
 
@@ -82,12 +87,17 @@ namespace Core.Services
                     {
                         break;
                     }
+
+                    if (item.Name.Equals(orbitItems[i].Name) && item.Mass == orbitItems[i].Mass && item.Radius == orbitItems[i].Radius && item.OrbitingDistance == orbitItems[i].OrbitingDistance && item.OrbitPeriod == orbitItems[i].OrbitPeriod)
+                    {
+                        return false;
+                    }
                 }
 
                 if (idAlreadyExists || !orbitingIdExists)
                 {
                     return false;
-                } 
+                }
             }
 
             foreach (OrbitItem item in items)
@@ -314,6 +324,15 @@ namespace Core.Services
                 }
             }
 
+            //make sure it creates no ambiguity between values
+            for (int i = 0; i < orbitItems.Count; i++)
+            {
+                if(item.Id != orbitItems[i].Id && item.Name.Equals(orbitItems[i].Name) && item.Mass == orbitItems[i].Mass && item.Radius == orbitItems[i].Radius && item.OrbitingDistance == orbitItems[i].OrbitingDistance && item.OrbitPeriod == orbitItems[i].OrbitPeriod)
+                {
+                    return false;
+                }
+            }
+
             DoUpdate(item);
             return true;
         }
@@ -338,6 +357,24 @@ namespace Core.Services
                 if (item.OrbitingId != 0)
                 {
                     if (InifiniteLoops(items, item.OrbitingId, item.Id))
+                    {
+                        return false;
+                    }
+                }
+
+                //make sure there's no ambiguity between items
+                foreach(OrbitItem otherItem in items)
+                {
+                    if (item.Id != otherItem.Id && item.Name.Equals(otherItem.Name) && item.Mass == otherItem.Mass && item.Radius == otherItem.Radius && item.OrbitingDistance == otherItem.OrbitingDistance && item.OrbitPeriod == otherItem.OrbitPeriod)
+                    {
+                        return false;
+                    }
+                }
+
+                //make sure it creates no ambiguity between values
+                for (int i = 0; i < orbitItems.Count; i++)
+                {
+                    if (item.Id != orbitItems[i].Id && item.Name.Equals(orbitItems[i].Name) && item.Mass == orbitItems[i].Mass && item.Radius == orbitItems[i].Radius && item.OrbitingDistance == orbitItems[i].OrbitingDistance && item.OrbitPeriod == orbitItems[i].OrbitPeriod)
                     {
                         return false;
                     }

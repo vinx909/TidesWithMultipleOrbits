@@ -22,7 +22,6 @@ namespace Core.Interfaces
         /// <returns></returns>
         public int TimeTillRestart();
 
-        //todo: deside between using radiance and degrees
         /// <summary>
         /// gets the angle from itemAtZeroDegrees via itemCentral to itemMeasure at a given time
         /// </summary>
@@ -30,7 +29,7 @@ namespace Core.Interfaces
         /// <param name="itemAtZeroDegrees"></param>
         /// <param name="itemMeasure"></param>
         /// <param name="time"></param>
-        /// <returns>angle in radiance/degrees</returns>
+        /// <returns>angle in radiance</returns>
         public double AngleTo(OrbitItem itemCentral, OrbitItem itemAtZeroDegrees, OrbitItem itemMeasure, int time);
 
         /// <summary>

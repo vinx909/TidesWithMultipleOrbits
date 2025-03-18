@@ -21,5 +21,21 @@ namespace Core.Test.TideCalculator
 
             Assert.IsType<Service.TideCalculator>(result);
         }
+
+        [Fact]
+        public void ThrowsExceptionWhenIOrbitItemsRepositoryIsNull()
+        {
+            Mock<IWriter> mockWriter = new();
+
+            Assert.Throws< ArgumentNullException>(() => new Service.TideCalculator(null, mockWriter.Object));
+        }
+
+        [Fact]
+        public void ThrowsExceptionWhenIWriterIsNull()
+        {
+            Mock<IOrbitItemsRepository> mockItemsRepository = new();
+
+            Assert.Throws<ArgumentNullException>(() => new Service.TideCalculator(mockItemsRepository.Object, null));
+        }
     }
 }

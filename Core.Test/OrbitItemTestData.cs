@@ -35,8 +35,8 @@ namespace Core.Test
             NotContainingOrbiterSubThree = new() { Id = 9, Name = "moon three", OrbitingId = 2, Mass = 30, Radius = 6, OrbitingDistance = 600, OrbitPeriod = 75 };
             NotContainingOrbiterSubSubTwo = new() { Id = 10, Name = "moonmoon two", OrbitingId = 4, Mass = 4, Radius = 1, OrbitingDistance = 40, OrbitPeriod = 6 };
 
-            ContainedOrbitItems = new List<Entities.OrbitItem>() { ContainingNotOrbiterOne, ContainingOrbiterOne, ContainingOrbiterTwo, ContainingOrbiterSubOne, ContainingOrbiterSubTwo, ContainingOrbiterSubSubOne };
-            NotContainedOrbitItems = new List<Entities.OrbitItem>() { NotContainingNotOrbiterTwo, NotContainingOrbiterThree, NotContainingOrbiterSubThree, NotContainingOrbiterSubSubTwo };
+            ContainedOrbitItems = [ContainingNotOrbiterOne, ContainingOrbiterOne, ContainingOrbiterTwo, ContainingOrbiterSubOne, ContainingOrbiterSubTwo, ContainingOrbiterSubSubOne];
+            NotContainedOrbitItems = [NotContainingNotOrbiterTwo, NotContainingOrbiterThree, NotContainingOrbiterSubThree, NotContainingOrbiterSubSubTwo];
         }
 
         protected static Entities.OrbitItem Copy(Entities.OrbitItem item)

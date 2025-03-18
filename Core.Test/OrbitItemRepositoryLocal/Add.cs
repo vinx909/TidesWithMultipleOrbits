@@ -369,10 +369,10 @@ namespace Core.Test.OrbitItemRepositoryLocal
         [Fact]
         public void ReturnsFalse_WhenAddingEnumerableItemWithSameValuesOnlyDifferentIdAndOrbitingId()
         {
-            sut.Add(ContainingNotOrbiterOne);
-            var copy = Copy(ContainingNotOrbiterOne);
-            copy.Id = 2;
-            copy.OrbitingId = 1;
+            sut.Add([ContainingNotOrbiterOne, ContainingOrbiterOne]);
+            var copy = Copy(ContainingOrbiterOne);
+            copy.Id = 3;
+            copy.OrbitingId = 2;
 
             bool result = sut.Add([copy]);
 
@@ -382,10 +382,10 @@ namespace Core.Test.OrbitItemRepositoryLocal
         [Fact]
         public void GetReturnsNull_WhenAddingEnumerableItemWithSameValuesOnlyDifferentIdAndOrbitingId()
         {
-            sut.Add(ContainingNotOrbiterOne);
-            var copy = Copy(ContainingNotOrbiterOne);
-            copy.Id = 2;
-            copy.OrbitingId = 1;
+            sut.Add([ContainingNotOrbiterOne, ContainingOrbiterOne]);
+            var copy = Copy(ContainingOrbiterOne);
+            copy.Id = 3;
+            copy.OrbitingId = 2;
 
             sut.Add([copy]);
             var result = sut.Get(copy.Id);
@@ -396,7 +396,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         [Fact]
         public void ReturnsFalse_WhenAddingEnumerableItemWithSameValuesOnlyDifferentId()
         {
-            sut.Add(ContainingNotOrbiterOne);
+            sut.Add([ContainingNotOrbiterOne]);
             var copy = Copy(ContainingNotOrbiterOne);
             copy.Id = 2;
 
@@ -408,7 +408,7 @@ namespace Core.Test.OrbitItemRepositoryLocal
         [Fact]
         public void GetReturnsNull_WhenAddingEnumerableItemWithSameValuesOnlyDifferentId()
         {
-            sut.Add(ContainingNotOrbiterOne);
+            sut.Add([ContainingNotOrbiterOne]);
             var copy = Copy(ContainingNotOrbiterOne);
             copy.Id = 2;
 
@@ -421,25 +421,27 @@ namespace Core.Test.OrbitItemRepositoryLocal
         [Fact]
         public void ReturnsFalse_WhenAddingMultipelItemsWithSameValuesOnlyDifferentIdAndOrbitingId()
         {
-            var copy = Copy(ContainingNotOrbiterOne);
-            copy.Id = 2;
-            copy.OrbitingId = 1;
+            sut.Add([ContainingNotOrbiterOne]);
+            var copy = Copy(ContainingOrbiterOne);
+            copy.Id = 3;
+            copy.OrbitingId = 2;
 
-            bool result = sut.Add([ContainingNotOrbiterOne, copy]);
+            bool result = sut.Add([ContainingOrbiterOne, copy]);
 
             Assert.False(result);
         }
 
         [Theory]
-        [InlineData(1)]
         [InlineData(2)]
+        [InlineData(3)]
         public void GetReturnsNullForEither_WhenAddingMultipelItemsWithSameValuesOnlyDifferentIdAndOrbitingId(int id)
         {
-            var copy = Copy(ContainingNotOrbiterOne);
-            copy.Id = 2;
-            copy.OrbitingId = 1;
+            sut.Add([ContainingNotOrbiterOne]);
+            var copy = Copy(ContainingOrbiterOne);
+            copy.Id = 3;
+            copy.OrbitingId = 2;
 
-            sut.Add([ContainingNotOrbiterOne, copy]);
+            sut.Add([ContainingOrbiterOne, copy]);
             var result = sut.Get(id);
 
             Assert.Null(result);
