@@ -27,7 +27,6 @@ namespace Core.Test.TideCalculator
         protected Entities.OrbitItem SystemTwoSataliteTwo;
         protected Entities.OrbitItem SystemTwoSubSataliteOne;
         protected Entities.OrbitItem SystemTwoSubSataliteTwo;
-        protected Entities.OrbitItem SystemTwoSubSatalite;
         protected Entities.OrbitItem SystemTwoSubSubSatalite;
 
         protected IEnumerable<Entities.OrbitItem> SystemOneOrbitItems;
@@ -47,11 +46,11 @@ namespace Core.Test.TideCalculator
             SystemTwoSataliteOne = new() { Id = 5, Mass = 1000, Name = "right triangle B", OrbitingId = 4, Radius = 100, OrbitingDistance = 10000, OrbitPeriod = 4 };
             SystemTwoSataliteTwo = new() { Id = 6, Mass = 1000, Name = "right triangle C", OrbitingId = 4, Radius = 100, OrbitingDistance = 20000, OrbitPeriod = 2 };
             SystemTwoSubSataliteOne = new() { Id = 7, Mass = 10, Name = "rectangle", OrbitingId = 6, Radius = 10, OrbitingDistance = 10000, OrbitPeriod = 4 };
-            SystemTwoSubSataliteTwo = new() { Id = 8, Mass = 10, Name = "rectangle mid point A", OrbitingId = 5, Radius = 10, OrbitingDistance = 1000, OrbitPeriod = 4 };
+            SystemTwoSubSataliteTwo = new() { Id = 8, Mass = 10, Name = "rectangle mid point A", OrbitingId = 6, Radius = 10, OrbitingDistance = 1000, OrbitPeriod = 1 };
             SystemTwoSubSubSatalite = new() { Id = 9, Mass = 1, Name = "rectangle mid point B", OrbitingId = 7, Radius = 1, OrbitingDistance = 1000, OrbitPeriod = 1 };
 
             SystemOneOrbitItems = new List<Entities.OrbitItem>() { SystemOneStar, SystemOneSataliteOne, SystemOneSataliteTwo};
-            SystemTwoOrbitItems = new List<Entities.OrbitItem>() { SystemTwoStar, SystemTwoSataliteOne, SystemTwoSataliteTwo, SystemTwoSubSataliteOne, SystemTwoSubSubSatalite };
+            SystemTwoOrbitItems = new List<Entities.OrbitItem>() { SystemTwoStar, SystemTwoSataliteOne, SystemTwoSataliteTwo, SystemTwoSubSataliteOne, SystemTwoSubSataliteTwo, SystemTwoSubSubSatalite };
         }
     }
 }

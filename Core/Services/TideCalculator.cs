@@ -260,7 +260,18 @@ namespace Core.Services
         {
             (double, double) vectorOne = (coordinates[atZeroId].Item1 - coordinates[centralId].Item1, coordinates[atZeroId].Item2 - coordinates[centralId].Item2);
             (double, double) vectorTwo = (coordinates[measureId].Item1 - coordinates[centralId].Item1, coordinates[measureId].Item2 - coordinates[centralId].Item2);
+            return GetAngle(vectorOne, vectorTwo);
+        }
 
+        private static double GetAngle(Dictionary<int, (double, double)> coordinates, int centralId, int atZeroId, (double, double) vectorTwo)
+        {
+            (double, double) vectorOne = (coordinates[atZeroId].Item1 - coordinates[centralId].Item1, coordinates[atZeroId].Item2 - coordinates[centralId].Item2);
+
+            return GetAngle(vectorOne, vectorTwo);
+        }
+
+        private static double GetAngle((double, double) vectorOne, (double, double) vectorTwo)
+        {
             double vectorOneTimesVectorTwo = vectorOne.Item1 * vectorTwo.Item1 + vectorOne.Item2 * vectorTwo.Item2;
             double absoluteVectorOne = Math.Pow(Math.Pow(vectorOne.Item1, 2) + Math.Pow(vectorOne.Item2, 2), 0.5);
             double absoluteVectorTwo = Math.Pow(Math.Pow(vectorTwo.Item1, 2) + Math.Pow(vectorTwo.Item2, 2), 0.5);
@@ -277,7 +288,7 @@ namespace Core.Services
             }
         }
 
-        private double GetDistance(Dictionary<int, (double, double)> coordiantes, int centralItemId, int measureItemId)
+        private static double GetDistance(Dictionary<int, (double, double)> coordiantes, int centralItemId, int measureItemId)
         {
             return Math.Pow(Math.Pow(coordiantes[centralItemId].Item1 - coordiantes[measureItemId].Item1, 2) + Math.Pow(coordiantes[centralItemId].Item2 - coordiantes[measureItemId].Item2, 2), 0.5);
         }
