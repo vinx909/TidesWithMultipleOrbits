@@ -9,6 +9,8 @@ namespace Core.Test.TideCalculator
 {
     public class DistanceAndAngleBetween : TideCalculatorTestBase
     {
+        const double tolerance = 0.00000000001;
+
         [Fact]
         public void CallsGetIdOfOrbitItem()
         {
@@ -125,7 +127,7 @@ namespace Core.Test.TideCalculator
 
             var result = sut.DistanceAndAngleBetween(sataliteTwo, sataliteOne, star, 0);
 
-            Assert.Equal(Math.Acos(1), result.Item1);
+            Assert.Equal(Math.Acos(1), result.Item1, tolerance);
         }
 
         [Fact]
@@ -143,7 +145,7 @@ namespace Core.Test.TideCalculator
 
             var result = sut.DistanceAndAngleBetween(sataliteTwo, sataliteOne, star, 0);
 
-            Assert.Equal(sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance, result.Item1);
+            Assert.Equal(sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance, result.Item2, tolerance);
         }
 
         [Fact]
@@ -161,7 +163,7 @@ namespace Core.Test.TideCalculator
 
             var result = sut.DistanceAndAngleBetween(sataliteTwo, sataliteOne, star, 2);
 
-            Assert.Equal(Math.Acos(1), result.Item1);
+            Assert.Equal(Math.Acos(1), result.Item1, tolerance);
         }
 
         [Fact]
@@ -179,7 +181,7 @@ namespace Core.Test.TideCalculator
 
             var result = sut.DistanceAndAngleBetween(sataliteTwo, sataliteOne, star, 2);
 
-            Assert.Equal(sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance, result.Item1);
+            Assert.Equal(sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance, result.Item2, tolerance);
         }
 
         [Fact]
@@ -197,7 +199,7 @@ namespace Core.Test.TideCalculator
 
             var result = sut.DistanceAndAngleBetween(sataliteTwo, sataliteOne, star, 1);
 
-            Assert.Equal(Math.Acos(4/(2*Math.Pow(5,0.5))), result.Item1);
+            Assert.Equal(Math.Acos(4/(2*Math.Pow(5,0.5))), result.Item1, tolerance);
         }
 
         [Fact]
@@ -215,7 +217,7 @@ namespace Core.Test.TideCalculator
 
             var result = sut.DistanceAndAngleBetween(sataliteTwo, sataliteOne, star, 1);
 
-            Assert.Equal(Math.Pow(Math.Pow(sataliteTwo.OrbitingDistance, 2) + Math.Pow(sataliteOne.OrbitingDistance, 2), 0.5), result.Item1);
+            Assert.Equal(Math.Pow(Math.Pow(sataliteTwo.OrbitingDistance, 2) + Math.Pow(sataliteOne.OrbitingDistance, 2), 0.5), result.Item2, tolerance);
         }
 
         [Fact]
@@ -231,9 +233,9 @@ namespace Core.Test.TideCalculator
             mockItemsRepository.Setup(m => m.Get(sataliteOne.Id)).Returns(sataliteOne);
             mockItemsRepository.Setup(m => m.Get(sataliteTwo.Id)).Returns(sataliteTwo);
 
-            var result = sut.DistanceAndAngleBetween(sataliteTwo, sataliteOne, star, 3);
+            var result = sut.DistanceAndAngleBetween(sataliteTwo, star, sataliteOne, 3);
 
-            Assert.Equal(Math.Acos(4 / (2 * Math.Pow(5, 0.5))), result.Item1);
+            Assert.Equal(Math.Acos(4 / (2 * Math.Pow(5, 0.5))), result.Item1, tolerance);
         }
 
         [Fact]
@@ -251,7 +253,7 @@ namespace Core.Test.TideCalculator
 
             var result = sut.DistanceAndAngleBetween(sataliteTwo, sataliteOne, star, 3);
 
-            Assert.Equal(Math.Pow(Math.Pow(sataliteTwo.OrbitingDistance, 2) + Math.Pow(sataliteOne.OrbitingDistance, 2), 0.5), result.Item1);
+            Assert.Equal(Math.Pow(Math.Pow(sataliteTwo.OrbitingDistance, 2) + Math.Pow(sataliteOne.OrbitingDistance, 2), 0.5), result.Item2, tolerance);
         }
     }
 }

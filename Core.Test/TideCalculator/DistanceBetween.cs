@@ -10,6 +10,8 @@ namespace Core.Test.TideCalculator
 {
     public class DistanceBetween : TideCalculatorTestBase
     {
+        const double tolerance = 0.00000000001;
+
         [Fact]
         public void CallsGetIdOfOrbitItem()
         {
@@ -105,13 +107,13 @@ namespace Core.Test.TideCalculator
 
             var result = sut.DistanceBetween(star, satalite, 0);
 
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, result, tolerance);
         }
 
         [Fact]
         public void ReturnsCorrect_SataliteToSataliteStartPosition()
         {
-            Entities.OrbitItem star = SystemOneStar;
+            Entities.OrbitItem star = SystemTwoStar;
             Entities.OrbitItem sataliteOne = SystemTwoSataliteOne;
             Entities.OrbitItem sataliteTwo = SystemTwoSataliteTwo;
             double expected = sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance;
@@ -124,13 +126,13 @@ namespace Core.Test.TideCalculator
 
             var result = sut.DistanceBetween(sataliteOne, sataliteTwo, 0);
 
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, result, tolerance);
         }
 
         [Fact]
         public void ReturnsCorrect_SataliteToSatalite180Degrees()
         {
-            Entities.OrbitItem star = SystemOneStar;
+            Entities.OrbitItem star = SystemTwoStar;
             Entities.OrbitItem sataliteOne = SystemTwoSataliteOne;
             Entities.OrbitItem sataliteTwo = SystemTwoSataliteTwo;
             double expected = sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance;
@@ -143,13 +145,13 @@ namespace Core.Test.TideCalculator
 
             var result = sut.DistanceBetween(sataliteOne, sataliteTwo, 2);
 
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, result, tolerance);
         }
 
         [Fact]
         public void ReturnsCorrect_SataliteToSatalite90Degrees()
         {
-            Entities.OrbitItem star = SystemOneStar;
+            Entities.OrbitItem star = SystemTwoStar;
             Entities.OrbitItem sataliteOne = SystemTwoSataliteOne;
             Entities.OrbitItem sataliteTwo = SystemTwoSataliteTwo;
             double expected = Math.Pow(Math.Pow(sataliteTwo.OrbitingDistance, 2) + Math.Pow(sataliteOne.OrbitingDistance,2), 0.5);
@@ -162,13 +164,13 @@ namespace Core.Test.TideCalculator
 
             var result = sut.DistanceBetween(sataliteOne, sataliteTwo, 1);
 
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, result, tolerance);
         }
 
         [Fact]
         public void CallGetIntExpectedAmountsOfTimes_SataliteToSubSubSataliteComplicated()
         {
-            Entities.OrbitItem star = SystemOneStar;
+            Entities.OrbitItem star = SystemTwoStar;
             Entities.OrbitItem sataliteOne = SystemTwoSataliteOne;
             Entities.OrbitItem sataliteTwo = SystemTwoSataliteTwo;
             Entities.OrbitItem subSatalites = SystemTwoSubSataliteOne;
@@ -193,7 +195,7 @@ namespace Core.Test.TideCalculator
         [Fact]
         public void CallGetWithOrbitingIds_SataliteToSubSubSataliteComplicated()
         {
-            Entities.OrbitItem star = SystemOneStar;
+            Entities.OrbitItem star = SystemTwoStar;
             Entities.OrbitItem sataliteOne = SystemTwoSataliteOne;
             Entities.OrbitItem sataliteTwo = SystemTwoSataliteTwo;
             Entities.OrbitItem subSatalites = SystemTwoSubSataliteOne;
@@ -222,7 +224,7 @@ namespace Core.Test.TideCalculator
         [Fact]
         public void ReturnsCorrect_SataliteToSubSubSataliteComplicated()
         {
-            Entities.OrbitItem star = SystemOneStar;
+            Entities.OrbitItem star = SystemTwoStar;
             Entities.OrbitItem sataliteOne = SystemTwoSataliteOne;
             Entities.OrbitItem sataliteTwo = SystemTwoSataliteTwo;
             Entities.OrbitItem subSatalites = SystemTwoSubSataliteOne;
@@ -241,7 +243,7 @@ namespace Core.Test.TideCalculator
 
             var result = sut.DistanceBetween(sataliteOne, subSubSatalites, 1);
 
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, result, tolerance);
         }
     }
 }

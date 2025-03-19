@@ -13,6 +13,7 @@ namespace Core.Services
         private const string fieldSeperator = "\t";
         private const string lineSeperator = "\r\n";
         private const double incorrectAngle = 4;
+        private const double incorecctDistance = -1;
 
         private readonly IOrbitItemsRepository orbitItemsRepository;
         private readonly IWriter writer;
@@ -41,11 +42,11 @@ namespace Core.Services
             this.writer = writer;
         }
 
-        public double AngleTo(OrbitItem itemCentral, OrbitItem itemAtZeroDegrees, OrbitItem itemMeasure, int time)
+        public double AngleTo(OrbitItem centralItem, OrbitItem itemAtZeroDegrees, OrbitItem measureItem, int time)
         {
-            int? centralItemId = orbitItemsRepository.GetIdOf(itemCentral);
+            int? centralItemId = orbitItemsRepository.GetIdOf(centralItem);
             int? atZeroDegreesId = orbitItemsRepository.GetIdOf(itemAtZeroDegrees);
-            int? measureItemId = orbitItemsRepository.GetIdOf(itemMeasure);
+            int? measureItemId = orbitItemsRepository.GetIdOf(measureItem);
 
             if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId || atZeroDegreesId == measureItemId)
             {
@@ -63,12 +64,59 @@ namespace Core.Services
 
         public (double, double) DistanceAndAngleBetween(OrbitItem centralItem, OrbitItem measuringItem, OrbitItem itemAtZeroDegrees, int time)
         {
+            int? centralItemId = orbitItemsRepository.GetIdOf(centralItem);
+            int? atZeroDegreesId = orbitItemsRepository.GetIdOf(itemAtZeroDegrees);
+            int? measureItemId = orbitItemsRepository.GetIdOf(measuringItem);
+
+            if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId || atZeroDegreesId == measureItemId)
+            {
+                return (incorrectAngle, incorecctDistance);
+            }
+
+            List<OrbitItem> items = GatherItems([(int)centralItemId, (int)atZeroDegreesId, (int)measureItemId]);
+
+            if (items == null || items.Count == 0) { return (incorrectAngle, incorecctDistance); }
+
+            Dictionary<int, (double, double)> coordiantes = GetCoordinates(items, time);
+
+            double angle = GetAngle(coordiantes, (int)centralItemId, (int)atZeroDegreesId, (int)measureItemId);
+            double distance = GetDistance(coordiantes, (int)(centralItemId), (int)measureItemId);
+
+            if (angle == incorrectAngle || distance == incorecctDistance)
+            {
+                return (incorrectAngle, incorecctDistance);
+            }
+
+            return (angle,  distance);
+
+
             throw new NotImplementedException();
         }
 
         public double DistanceBetween(OrbitItem ItemOne, OrbitItem ItemTwo, int time)
         {
-            throw new NotImplementedException();
+            int? itemOneId = orbitItemsRepository.GetIdOf(ItemOne);
+            int? itemTwoId = orbitItemsRepository.GetIdOf(ItemTwo);
+
+            if (itemOneId == null || itemTwoId == null || itemOneId == itemTwoId)
+            {
+                return incorecctDistance;
+            }
+
+            List<OrbitItem> items = GatherItems([(int)itemOneId, (int)itemTwoId]);
+
+            if (items == null || items.Count == 0) { return incorecctDistance; }
+
+            Dictionary<int, (double, double)> coordiantes = GetCoordinates(items, time);
+
+            double distance = GetDistance(coordiantes, (int)(itemOneId), (int)itemTwoId);
+
+            if (distance == incorecctDistance)
+            {
+                return incorecctDistance;
+            }
+
+            return distance;
         }
 
         public bool ProvideRangeToWorkWith(IEnumerable<OrbitItem> items)
@@ -227,6 +275,11 @@ namespace Core.Services
             {
                 return -angle;
             }
+        }
+
+        private double GetDistance(Dictionary<int, (double, double)> coordiantes, int centralItemId, int measureItemId)
+        {
+            return Math.Pow(Math.Pow(coordiantes[centralItemId].Item1 - coordiantes[measureItemId].Item1, 2) + Math.Pow(coordiantes[centralItemId].Item2 - coordiantes[measureItemId].Item2, 2), 0.5);
         }
     }
 }
