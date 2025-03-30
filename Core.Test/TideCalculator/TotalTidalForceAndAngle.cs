@@ -8,6 +8,8 @@ namespace Core.Test.TideCalculator
 {
     public class TotalTidalForceAndAngle : TideCalculatorTestBase
     {
+        new double tolerance = gravitationalConstant * 0.0001;
+
         [Fact]
         public void CallsIOrbitItemRepositoryGetAll()
         {
@@ -102,14 +104,14 @@ namespace Core.Test.TideCalculator
         [InlineData(0,2)]
         [InlineData(0,3)]
         [InlineData(3,2)]
-        public void ReturnsThreeLower_WhenFurtherAway(int timeCloser, int timeFurther)
+        public void ReturnsThreeLessLow_WhenFurtherAway(int timeCloser, int timeFurther)
         {
             mockItemsRepository.Setup(m => m.GetAll()).Returns([SystemTwoStar, SystemTwoSataliteOne, SystemTwoSataliteTwo]);
 
             var resultCloser = sut.TotalTidalForceAndAngle(SystemTwoSataliteTwo, SystemTwoStar, timeCloser);
             var resultFurther = sut.TotalTidalForceAndAngle(SystemTwoSataliteTwo, SystemTwoStar, timeFurther);
 
-            Assert.True(resultCloser.Item3 > resultFurther.Item3);
+            Assert.True(resultCloser.Item3 < resultFurther.Item3);
         }
 
         [Theory]
@@ -119,16 +121,17 @@ namespace Core.Test.TideCalculator
         {
             mockItemsRepository.Setup(m => m.GetAll()).Returns([SystemTwoStar, SystemTwoSataliteOne, SystemTwoSataliteTwo]);
 
-            var result = sut.TotalTidalForceAndAngle(SystemOneStar, SystemOneSataliteTwo, time);
+            var result = sut.TotalTidalForceAndAngle(SystemTwoSataliteTwo, SystemTwoStar, time);
 
             Assert.Equal(0, result.Item4, tolerance);
         }
 
+        [Fact]
         public void ReturnsFourMoreThenZero_WhenNotInLine()
         {
             mockItemsRepository.Setup(m => m.GetAll()).Returns([SystemTwoStar, SystemTwoSataliteOne, SystemTwoSataliteTwo]);
 
-            var result = sut.TotalTidalForceAndAngle(SystemOneStar, SystemOneSataliteTwo, 3);
+            var result = sut.TotalTidalForceAndAngle(SystemTwoSataliteTwo, SystemTwoStar, 1);
 
             Assert.True(result.Item4 > 0);
         }
@@ -138,7 +141,7 @@ namespace Core.Test.TideCalculator
         {
             mockItemsRepository.Setup(m => m.GetAll()).Returns([SystemTwoStar, SystemTwoSataliteOne, SystemTwoSataliteTwo]);
 
-            var result = sut.TotalTidalForceAndAngle(SystemOneStar, SystemOneSataliteTwo, 1);
+            var result = sut.TotalTidalForceAndAngle(SystemTwoSataliteTwo, SystemTwoStar, 3);
 
             Assert.True(result.Item4 < 0);
         }
@@ -150,7 +153,7 @@ namespace Core.Test.TideCalculator
         {
             mockItemsRepository.Setup(m => m.GetAll()).Returns([SystemTwoStar, SystemTwoSataliteOne, SystemTwoSataliteTwo]);
 
-            var result = sut.TotalTidalForceAndAngle(SystemOneStar, SystemOneSataliteTwo, time);
+            var result = sut.TotalTidalForceAndAngle(SystemTwoSataliteTwo, SystemTwoStar, time);
 
             Assert.True(result.Item2 > result.Item3);
         }
@@ -162,7 +165,7 @@ namespace Core.Test.TideCalculator
         {
             mockItemsRepository.Setup(m => m.GetAll()).Returns([SystemTwoStar, SystemTwoSataliteOne, SystemTwoSataliteTwo]);
 
-            var result = sut.TotalTidalForceAndAngle(SystemOneStar, SystemOneSataliteTwo, time);
+            var result = sut.TotalTidalForceAndAngle(SystemTwoSataliteTwo, SystemTwoStar, time);
 
             Assert.True(result.Item2 < result.Item1);
         }
@@ -178,7 +181,7 @@ namespace Core.Test.TideCalculator
                 double distanceOne = SystemTwoSataliteTwo.OrbitingDistance;
                 double forceOne = GetTidalForce(SystemTwoStar.Mass, SystemTwoSataliteTwo.Radius, distanceOne);
                 double distanceTwo = SystemTwoSataliteTwo.OrbitingDistance - SystemTwoSataliteOne.OrbitingDistance;
-                double forceTwo = GetTidalForce(SystemOneSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
+                double forceTwo = GetTidalForce(SystemTwoSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
                 expected = forceOne + forceTwo;
             }
             else if (time == 2)
@@ -186,7 +189,7 @@ namespace Core.Test.TideCalculator
                 double distanceOne = SystemTwoSataliteTwo.OrbitingDistance;
                 double forceOne = GetTidalForce(SystemTwoStar.Mass, SystemTwoSataliteTwo.Radius, distanceOne);
                 double distanceTwo = SystemTwoSataliteTwo.OrbitingDistance + SystemTwoSataliteOne.OrbitingDistance;
-                double forceTwo = GetTidalForce(SystemOneSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
+                double forceTwo = GetTidalForce(SystemTwoSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
                 expected = forceOne + forceTwo;
             }
             if(expected == -1)
@@ -195,7 +198,7 @@ namespace Core.Test.TideCalculator
             }
             mockItemsRepository.Setup(m => m.GetAll()).Returns([SystemTwoStar, SystemTwoSataliteOne,  SystemTwoSataliteTwo]);
 
-            var result = sut.TotalTidalForceAndAngle(SystemTwoStar, SystemTwoStar, time);
+            var result = sut.TotalTidalForceAndAngle(SystemTwoSataliteTwo, SystemTwoStar, time);
 
             Assert.Equal(expected, result.Item1, tolerance);
         }
@@ -211,16 +214,16 @@ namespace Core.Test.TideCalculator
                 double distanceOne = SystemTwoSataliteTwo.OrbitingDistance;
                 double forceOne = GetTidalForce(SystemTwoStar.Mass, SystemTwoSataliteTwo.Radius, distanceOne);
                 double distanceTwo = SystemTwoSataliteTwo.OrbitingDistance - SystemTwoSataliteOne.OrbitingDistance;
-                double forceTwo = GetTidalForce(SystemOneSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
-                expected = (forceOne + forceTwo) * -2 / 3;
+                double forceTwo = GetTidalForce(SystemTwoSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
+                expected = (forceOne + forceTwo) * -0.5;
             }
             else if (time == 2)
             {
                 double distanceOne = SystemTwoSataliteTwo.OrbitingDistance;
                 double forceOne = GetTidalForce(SystemTwoStar.Mass, SystemTwoSataliteTwo.Radius, distanceOne);
                 double distanceTwo = SystemTwoSataliteTwo.OrbitingDistance + SystemTwoSataliteOne.OrbitingDistance;
-                double forceTwo = GetTidalForce(SystemOneSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
-                expected = (forceOne + forceTwo) * -2 / 3;
+                double forceTwo = GetTidalForce(SystemTwoSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
+                expected = (forceOne + forceTwo) * -0.5;
             }
             if (expected == 1)
             {
@@ -228,7 +231,7 @@ namespace Core.Test.TideCalculator
             }
             mockItemsRepository.Setup(m => m.GetAll()).Returns([SystemTwoStar, SystemTwoSataliteOne, SystemTwoSataliteTwo]);
 
-            var result = sut.TotalTidalForceAndAngle(SystemTwoStar, SystemTwoStar, time);
+            var result = sut.TotalTidalForceAndAngle(SystemTwoSataliteTwo, SystemTwoStar, time);
 
             Assert.Equal(expected, result.Item2, tolerance);
         }
@@ -238,7 +241,7 @@ namespace Core.Test.TideCalculator
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        public void ReturnCorrectValueThree_InLine(int time)
+        public void ReturnCorrectValueThree(int time)
         {
             double expected = 1;
             if (time == 0)
@@ -246,24 +249,24 @@ namespace Core.Test.TideCalculator
                 double distanceOne = SystemTwoSataliteTwo.OrbitingDistance;
                 double forceOne = GetTidalForce(SystemTwoStar.Mass, SystemTwoSataliteTwo.Radius, distanceOne);
                 double distanceTwo = SystemTwoSataliteTwo.OrbitingDistance - SystemTwoSataliteOne.OrbitingDistance;
-                double forceTwo = GetTidalForce(SystemOneSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
-                expected = (forceOne + forceTwo) * -2 / 3;
+                double forceTwo = GetTidalForce(SystemTwoSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
+                expected = (forceOne + forceTwo) * -0.5;
             }
             else if (time == 2)
             {
                 double distanceOne = SystemTwoSataliteTwo.OrbitingDistance;
                 double forceOne = GetTidalForce(SystemTwoStar.Mass, SystemTwoSataliteTwo.Radius, distanceOne);
                 double distanceTwo = SystemTwoSataliteTwo.OrbitingDistance + SystemTwoSataliteOne.OrbitingDistance;
-                double forceTwo = GetTidalForce(SystemOneSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
-                expected = (forceOne + forceTwo) * -2 / 3;
+                double forceTwo = GetTidalForce(SystemTwoSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
+                expected = (forceOne + forceTwo) * -0.5;
             }
             else if (time == 1 || time == 3)
             {
                 double distanceOne = SystemTwoSataliteTwo.OrbitingDistance;
                 double forceOne = GetTidalForce(SystemTwoStar.Mass, SystemTwoSataliteTwo.Radius, distanceOne);
-                double distanceTwo = Math.Pow(Math.Pow(SystemTwoSataliteTwo.OrbitingDistance, 2) + Math.Pow(SystemOneSataliteOne.OrbitingDistance, 2), 0.5);
-                double forceTwo = GetTidalForce(SystemOneSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
-                expected = (forceOne + forceTwo) * -2 / 3;
+                double distanceTwo = Math.Pow(Math.Pow(SystemTwoSataliteTwo.OrbitingDistance, 2) + Math.Pow(SystemTwoSataliteOne.OrbitingDistance, 2), 0.5);
+                double forceTwo = GetTidalForce(SystemTwoSataliteOne.Mass, SystemTwoSataliteTwo.Radius, distanceTwo);
+                expected = (forceOne + forceTwo) * -0.5;
             }
             if (expected == 1)
             {
@@ -271,7 +274,7 @@ namespace Core.Test.TideCalculator
             }
             mockItemsRepository.Setup(m => m.GetAll()).Returns([SystemTwoStar, SystemTwoSataliteOne, SystemTwoSataliteTwo]);
 
-            var result = sut.TotalTidalForceAndAngle(SystemTwoStar, SystemTwoStar, time);
+            var result = sut.TotalTidalForceAndAngle(SystemTwoSataliteTwo, SystemTwoStar, time);
 
             Assert.Equal(expected, result.Item2, tolerance);
         }

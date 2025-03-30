@@ -12,7 +12,7 @@ namespace Core.Test.TideCalculator
 {
     public class TideCalculatorTestBase
     {
-        private const double gravitationalConstant = 6.6743e-11;
+        protected const double gravitationalConstant = 6.6743e-11;
 
         protected const double tolerance = 0.00000000001;
         protected const string path = "pathToFile";

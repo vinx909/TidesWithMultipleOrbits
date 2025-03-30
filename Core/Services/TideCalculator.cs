@@ -155,11 +155,11 @@ namespace Core.Services
                 {
                     if (item != otherItem)
                     {
-                        if(item.Id == otherItem.Id)
+                        if (item.Id == otherItem.Id)
                         {
                             return false;
                         }
-                        else if(item.Name.Equals(otherItem.Name) && item.Mass == otherItem.Mass && item.Radius == otherItem.Radius && item.OrbitingDistance == otherItem.OrbitingDistance && item.OrbitPeriod == otherItem.OrbitPeriod)
+                        else if (IsSameOrbitItem(item, otherItem))
                         {
                             return false;
                         }
@@ -340,7 +340,28 @@ namespace Core.Services
 
         public (double, double, double, double) TotalTidalForceAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time)
         {
-            throw new NotImplementedException();
+            if (!GetAll(experiancer, itemAtZeroDegrees, out List<OrbitItem> items, out OrbitItem trueExperiencer, out OrbitItem trueItemAtZeroDegrees)) { return returnIncorrect(); }
+
+            Dictionary<int, (double, double)> coordinates = GetCoordinates(items, time);
+
+            (double, double)[] forcesAndAngles = new (double, double)[coordinates.Count - 1];
+
+            int index = 0;
+            foreach (OrbitItem item in items)
+            {
+                if (item != trueExperiencer)
+                {
+                    forcesAndAngles[index] = (GetTidalForce(trueExperiencer, item, GetDistance(coordinates, trueExperiencer.Id, item.Id)), CorrectAngle(GetAngle(coordinates, trueExperiencer.Id, itemAtZeroDegrees.Id, item.Id)));
+                    index++;
+                }
+            }
+
+            return GetTotalAndAngle(forcesAndAngles);
+
+            static (double, double, double, double) returnIncorrect()
+            {
+                return (incorecctForce, incorecctForce, incorecctForce, incorrectAngle);
+            }
         }
 
         public (double, double, double, double) TotalTidalHeightAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time)
@@ -373,43 +394,9 @@ namespace Core.Services
             throw new NotImplementedException();
         }
 
-        private List<OrbitItem> GatherItems(IEnumerable<int> ids)
+        private static bool IsSameOrbitItem(OrbitItem item, OrbitItem otherItem)
         {
-            List<OrbitItem> orbitItems = new();
-
-            //add the orbititems of the given ids to the list
-            foreach (int id in ids)
-            {
-                orbitItems.Add(orbitItemsRepository.Get(id));
-            }
-
-            for (int i = 0; i<orbitItems.Count; i++)
-            {
-                if(orbitItems[i] == null)
-                {
-                    return null;
-                }
-
-                if (orbitItems[i].OrbitingId != 0)
-                {
-                    bool orbitingIdAlreadyContains = false;
-                    for (int j = 0; j<orbitItems.Count; j++)
-                    {
-                        if(i!=j && orbitItems[j].Id == orbitItems[i].OrbitingId)
-                        {
-                            orbitingIdAlreadyContains = true;
-                            break;
-                        }
-                    }
-
-                    if (!orbitingIdAlreadyContains)
-                    {
-                        orbitItems.Add(orbitItemsRepository.Get(orbitItems[i].OrbitingId));
-                    }
-                }
-            }
-
-            return orbitItems;
+            return item.Name.Equals(otherItem.Name) && item.Mass == otherItem.Mass && item.Radius == otherItem.Radius && item.OrbitingDistance == otherItem.OrbitingDistance && item.OrbitPeriod == otherItem.OrbitPeriod;
         }
 
         private static Dictionary<int, (double, double)> GetCoordinates(List<OrbitItem> items, int time)
@@ -429,8 +416,8 @@ namespace Core.Services
                         }
                         else if (coordinates.TryGetValue(items[i].OrbitingId, out (double, double) orbitedCoordiates))
                         {
-                            double x = orbitedCoordiates.Item1 + items[i].OrbitingDistance * Math.Cos(Math.PI * 2 * time / items[i].OrbitPeriod);
-                            double y = orbitedCoordiates.Item2 + items[i].OrbitingDistance * Math.Sin(Math.PI * 2 * time / items[i].OrbitPeriod);
+                            double x = orbitedCoordiates.Item1 + items[i].OrbitingDistance * Math.Cos(2.0 * time / items[i].OrbitPeriod * Math.PI);
+                            double y = orbitedCoordiates.Item2 + items[i].OrbitingDistance * Math.Sin(2.0 * time / items[i].OrbitPeriod * Math.PI);
                             coordinates.Add(items[i].Id, (x, y));
                         } 
                     }
@@ -483,9 +470,9 @@ namespace Core.Services
             }
         }
 
-        private static double GetDistance(Dictionary<int, (double, double)> coordiantes, int centralItemId, int measureItemId)
+        private static double GetDistance(Dictionary<int, (double, double)> coordiantes, int itemOneId, int itemTwoId)
         {
-            return Math.Pow(Math.Pow(coordiantes[centralItemId].Item1 - coordiantes[measureItemId].Item1, 2) + Math.Pow(coordiantes[centralItemId].Item2 - coordiantes[measureItemId].Item2, 2), 0.5);
+            return Math.Pow(Math.Pow(coordiantes[itemOneId].Item1 - coordiantes[itemTwoId].Item1, 2) + Math.Pow(coordiantes[itemOneId].Item2 - coordiantes[itemTwoId].Item2, 2), 0.5);
         }
 
         private static double GetTidalForce(OrbitItem experiancer, OrbitItem excerting, double distance)
@@ -496,6 +483,151 @@ namespace Core.Services
         private static double GetTidalRange(OrbitItem experiancer, OrbitItem excerting, double distance)
         {
             return Math.Pow(experiancer.Radius, 4) / Math.Pow(distance, 3) * excerting.Mass / experiancer.Mass;
+        }
+
+        private bool GetAll(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, out List<OrbitItem> items, out OrbitItem itemOne, out OrbitItem itemTwo)
+        {
+            itemOne = null;
+            itemTwo = null;
+            items = null;
+
+            IEnumerable<OrbitItem> GetAllResults = orbitItemsRepository.GetAll();
+            if (GetAllResults == null || !GetAllResults.Any()) { return false; }
+            items = new(GetAllResults);
+
+            foreach (OrbitItem item in items)
+            {
+                if (itemOne == null && IsSameOrbitItem(item, experiancer))
+                {
+                    itemOne = item;
+                }
+                if (itemTwo == null && IsSameOrbitItem(item, itemAtZeroDegrees))
+                {
+                    itemTwo = item;
+                }
+                if (itemOne != null && itemTwo != null)
+                {
+                    return itemOne != itemTwo; //the two items should not be the same in any of the cases where they are used.
+                }
+            }
+            return false;
+        }
+
+        private List<OrbitItem> GatherItems(IEnumerable<int> ids)
+        {
+            List<OrbitItem> orbitItems = new();
+
+            //add the orbititems of the given ids to the list
+            foreach (int id in ids)
+            {
+                orbitItems.Add(orbitItemsRepository.Get(id));
+            }
+
+            for (int i = 0; i<orbitItems.Count; i++)
+            {
+                if(orbitItems[i] == null)
+                {
+                    return null;
+                }
+
+                if (orbitItems[i].OrbitingId != 0)
+                {
+                    bool orbitingIdAlreadyContains = false;
+                    for (int j = 0; j<orbitItems.Count; j++)
+                    {
+                        if(i!=j && orbitItems[j].Id == orbitItems[i].OrbitingId)
+                        {
+                            orbitingIdAlreadyContains = true;
+                            break;
+                        }
+                    }
+
+                    if (!orbitingIdAlreadyContains)
+                    {
+                        orbitItems.Add(orbitItemsRepository.Get(orbitItems[i].OrbitingId));
+                    }
+                }
+            }
+
+            return orbitItems;
+        }
+
+        private static double CorrectAngle(double angle)
+        {
+            if (angle > -0.5 * Math.PI && angle <= 0.5 * Math.PI)
+            {
+                return angle;
+            }
+            else if (angle > 0.5 * Math.PI && angle <= 1.5 * Math.PI)
+            {
+                return angle - Math.PI;
+            }
+            else if (angle <= 0.5 * Math.PI && angle > -1.5 * Math.PI)
+            {
+                return angle + Math.PI;
+            }
+            else
+            {
+                throw new Exception("the program is trying to work with an angle of "+angle+" or "+angle/Math.PI+ "π that it should not be able to generate and can't propperly handle");
+            }
+        }
+
+        private static (double, double, double, double) GetTotalAndAngle((double, double)[] totalAndAngles)
+        {
+            const double neepTideTollerance = 0.00000000001;
+            const double neepTideAngle = 0;
+
+            double angle;
+            if (totalAndAngles.Length == 0)
+            {
+                return (0, 0, 0, 0);
+            }
+            else if (totalAndAngles.Length == 1)
+            {
+                return (totalAndAngles[0].Item1, totalAndAngles[0].Item1 / 2, totalAndAngles[0].Item1 / 2, totalAndAngles[0].Item2);
+            }
+            else
+            {
+                //this builds on how you calculate R and ϕ whehn you know A, α, B, and β in A·cos(ωt+α)+B·cos(ωt+β)=R·cos(ωt+ϕ)
+                double cosMultiplier = totalAndAngles[0].Item1;
+                double angleAddition = totalAndAngles[0].Item2;
+                double newcosMultiplier;
+
+                for (int i = 1; i < totalAndAngles.Length; i++)
+                {
+                    //R = ((A·cos(α)+B·cos(β))2+(A·sin(α)+B·sin(β))2)1/2 
+                    newcosMultiplier =
+                        Math.Pow(
+                            Math.Pow(cosMultiplier * Math.Cos(angleAddition) + totalAndAngles[i].Item1 * Math.Cos(totalAndAngles[i].Item2), 2) +
+                            Math.Pow(cosMultiplier * Math.Sin(angleAddition) + totalAndAngles[i].Item1 * Math.Sin(totalAndAngles[i].Item2), 2), 0.5);
+                    angleAddition = Math.Atan2(
+                        cosMultiplier * Math.Sin(angleAddition) + totalAndAngles[i].Item1 * Math.Sin(totalAndAngles[i].Item2),
+                        cosMultiplier * Math.Cos(angleAddition) + totalAndAngles[i].Item1 * Math.Cos(totalAndAngles[i].Item2));
+                    cosMultiplier = newcosMultiplier;
+                }
+
+                angle = CorrectAngle(angleAddition);
+            }
+
+            double totalAtAnlge = 0;
+            double totalPerpendicularToAngle = 0;
+            double totalAtPole = 0;
+
+            for (int i = 0; i < totalAndAngles.Length; i++)
+            {
+                totalAtAnlge += totalAndAngles[i].Item1 * (Math.Cos((totalAndAngles[i].Item2 - angle) * 2) * 0.75 + 0.25);
+                totalPerpendicularToAngle += totalAndAngles[i].Item1 * (Math.Cos((totalAndAngles[i].Item2 - angle) * 2 + Math.PI) * 0.75 + 0.25);
+                totalAtPole += totalAndAngles[i].Item1 * -0.5;
+            }
+
+            if (totalAtAnlge < totalPerpendicularToAngle * (1 + neepTideTollerance) && totalAtAnlge > totalPerpendicularToAngle * (1 - neepTideTollerance))
+            {
+                return (totalAtAnlge, totalPerpendicularToAngle, totalAtPole, neepTideAngle);
+            }
+            else
+            {
+                return (totalAtAnlge, totalPerpendicularToAngle, totalAtPole, angle);
+            }
         }
     }
 }
