@@ -149,6 +149,6 @@ namespace Core.Interfaces
         /// <param name="finalTime"></param>
         /// <param name="timesteps"></param>
         /// <returns></returns>
-        public bool WriteTotalTidalHeightAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps);
+        public bool WriteTotalTidalHeightAndAngleToFile(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps);
     }
 }

@@ -220,7 +220,7 @@ namespace Core.Services
             throw new NotImplementedException();
         }
 
-        public bool WriteTotalTidalHeightAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps)
+        public bool WriteTotalTidalHeightAndAngleToFile(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps)
         {
             throw new NotImplementedException();
         }
