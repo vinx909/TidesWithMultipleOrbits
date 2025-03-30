@@ -12,6 +12,9 @@ namespace Core.Test.TideCalculator
 {
     public class TideCalculatorTestBase
     {
+        private const double gravitationalConstant = 6.6743e-11;
+
+        protected const double tolerance = 0.00000000001;
         protected const string path = "pathToFile";
 
         protected ITideCalculator sut;
@@ -51,6 +54,16 @@ namespace Core.Test.TideCalculator
 
             SystemOneOrbitItems = new List<Entities.OrbitItem>() { SystemOneStar, SystemOneSataliteOne, SystemOneSataliteTwo};
             SystemTwoOrbitItems = new List<Entities.OrbitItem>() { SystemTwoStar, SystemTwoSataliteOne, SystemTwoSataliteTwo, SystemTwoSubSataliteOne, SystemTwoSubSataliteTwo, SystemTwoSubSubSatalite };
+        }
+
+        protected static double GetTidalForce(int excertingMass, int experiancerRadius, double distance)
+        {
+            return 2 * gravitationalConstant * excertingMass * experiancerRadius / Math.Pow(distance, 3);
+        }
+
+        protected static double GetTidalHeight(int excertingMass, int experiancerMass, int experiancerRadius, double distance)
+        {
+            return Math.Pow(experiancerRadius, 4) / Math.Pow(distance, 3) * excertingMass / experiancerMass;
         }
     }
 }

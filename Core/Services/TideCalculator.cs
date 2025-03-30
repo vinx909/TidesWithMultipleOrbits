@@ -14,6 +14,10 @@ namespace Core.Services
         private const string lineSeperator = "\r\n";
         private const double incorrectAngle = 4;
         private const double incorecctDistance = -1;
+        private const double incorecctForce = -1;
+        private const double incorecctHeight = -1;
+        private const double incorecctTime = -1;
+        private const double gravitationalConstant = 6.6743e-11;
 
         private readonly IOrbitItemsRepository orbitItemsRepository;
         private readonly IWriter writer;
@@ -131,12 +135,54 @@ namespace Core.Services
 
         public double TidalForceBetweenTwoBodies(OrbitItem experiancer, OrbitItem excerter, int time)
         {
-            throw new NotImplementedException();
+            int? experiancerId = orbitItemsRepository.GetIdOf(experiancer);
+            int? excerterId = orbitItemsRepository.GetIdOf(excerter);
+
+            if (experiancerId == null || excerterId == null || experiancerId == excerterId)
+            {
+                return incorecctForce;
+            }
+
+            List<OrbitItem> items = GatherItems([(int)experiancerId, (int)excerterId]);
+
+            if (items == null || items.Count == 0) { return incorecctForce; }
+
+            Dictionary<int, (double, double)> coordiantes = GetCoordinates(items, time);
+
+            double distance = GetDistance(coordiantes, (int)(experiancerId), (int)excerterId);
+
+            if (distance == incorecctDistance)
+            {
+                return incorecctForce;
+            }
+
+            return GetTidalForce(experiancer, excerter, distance);
         }
 
         public double TidalHeightBetweenTwoBodies(OrbitItem experiancer, OrbitItem excerter, int time)
         {
-            throw new NotImplementedException();
+            int? experiancerId = orbitItemsRepository.GetIdOf(experiancer);
+            int? excerterId = orbitItemsRepository.GetIdOf(excerter);
+
+            if (experiancerId == null || excerterId == null || experiancerId == excerterId)
+            {
+                return incorecctHeight;
+            }
+
+            List<OrbitItem> items = GatherItems([(int)experiancerId, (int)excerterId]);
+
+            if (items == null || items.Count == 0) { return incorecctHeight; }
+
+            Dictionary<int, (double, double)> coordiantes = GetCoordinates(items, time);
+
+            double distance = GetDistance(coordiantes, (int)(experiancerId), (int)excerterId);
+
+            if (distance == incorecctDistance)
+            {
+                return incorecctHeight;
+            }
+
+            return GetTidalRange(experiancer, excerter, distance);
         }
 
         public int TimeTillRestart()
@@ -144,12 +190,12 @@ namespace Core.Services
             throw new NotImplementedException();
         }
 
-        public (double, double) TotalTidalForceAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time)
+        public (double, double, double, double) TotalTidalForceAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time)
         {
             throw new NotImplementedException();
         }
 
-        public (double, double) TotalTidalHeightAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time)
+        public (double, double, double, double) TotalTidalHeightAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time)
         {
             throw new NotImplementedException();
         }
@@ -174,15 +220,16 @@ namespace Core.Services
             throw new NotImplementedException();
         }
 
-        public bool WriteTotalTidalHeightAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time)
+        public bool WriteTotalTidalHeightAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps)
         {
             throw new NotImplementedException();
         }
 
         private List<OrbitItem> GatherItems(IEnumerable<int> ids)
         {
-            List<OrbitItem> orbitItems = new List<OrbitItem>();
+            List<OrbitItem> orbitItems = new();
 
+            //add the orbititems of the given ids to the list
             foreach (int id in ids)
             {
                 orbitItems.Add(orbitItemsRepository.Get(id));
@@ -291,6 +338,16 @@ namespace Core.Services
         private static double GetDistance(Dictionary<int, (double, double)> coordiantes, int centralItemId, int measureItemId)
         {
             return Math.Pow(Math.Pow(coordiantes[centralItemId].Item1 - coordiantes[measureItemId].Item1, 2) + Math.Pow(coordiantes[centralItemId].Item2 - coordiantes[measureItemId].Item2, 2), 0.5);
+        }
+
+        private static double GetTidalForce(OrbitItem experiancer, OrbitItem excerting, double distance)
+        {
+            return 2 * gravitationalConstant * excerting.Mass * experiancer.Radius / Math.Pow(distance, 3);
+        }
+
+        private static double GetTidalRange(OrbitItem experiancer, OrbitItem excerting, double distance)
+        {
+            return Math.Pow(experiancer.Radius, 4) / Math.Pow(distance, 3) * excerting.Mass / experiancer.Mass;
         }
     }
 }

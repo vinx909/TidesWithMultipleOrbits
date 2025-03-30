@@ -10,8 +10,6 @@ namespace Core.Test.TideCalculator
 {
     public class DistanceBetween : TideCalculatorTestBase
     {
-        const double tolerance = 0.00000000001;
-
         [Fact]
         public void CallsGetIdOfOrbitItem()
         {

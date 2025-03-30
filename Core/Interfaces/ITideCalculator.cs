@@ -75,8 +75,8 @@ namespace Core.Interfaces
         /// <param name="experiancer"></param>
         /// <param name="itemAtZeroDegrees"></param>
         /// <param name="time"></param>
-        /// <returns></returns>
-        public (double, double) TotalTidalForceAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time);
+        /// <returns>four values. the first is the maximum tidal force on the equator. the second is the minimal tidal force at the equator. the third is the tidal force at the pole. the forth is the angle of the maximum force at the equator</returns>
+        public (double, double, double, double) TotalTidalForceAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time);
 
         /// <summary>
         /// returns the total amount of tidal height the experiancer experiances from all items and in what direction the force is at a given time
@@ -84,8 +84,8 @@ namespace Core.Interfaces
         /// <param name="experiancer"></param>
         /// <param name="itemAtZeroDegrees"></param>
         /// <param name="time"></param>
-        /// <returns></returns>
-        public (double, double) TotalTidalHeightAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time);
+        /// <returns>four values. the first is the maximum tidal height on the equator. the second is the minimal tidal height at the equator. the third is the tidal height at the pole. the forth is the angle of the maximum height at the equator</returns>
+        public (double, double, double, double) TotalTidalHeightAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time);
 
         /// <summary>
         /// sets the path to write to in WriteCommands
@@ -145,8 +145,10 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="experiancer"></param>
         /// <param name="itemAtZeroDegrees"></param>
-        /// <param name="time"></param>
+        /// <param name="initialTime"></param>
+        /// <param name="finalTime"></param>
+        /// <param name="timesteps"></param>
         /// <returns></returns>
-        public bool WriteTotalTidalHeightAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time);
+        public bool WriteTotalTidalHeightAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps);
     }
 }

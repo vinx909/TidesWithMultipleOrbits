@@ -275,6 +275,51 @@ namespace Core.Test.TideCalculator
         }
 
         [Fact]
+        public void CallsIWriterStopWriting()
+        {
+            var star = SystemOneStar;
+            var sataliteOne = SystemOneSataliteOne;
+            var sataliteTwo = SystemOneSataliteTwo;
+            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
+            mockWriter.Setup(m => m.IsWriting()).Returns(false);
+            mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
+            sut.SetWritePath(path);
+            mockItemsRepository.Setup(m => m.GetIdOf(star)).Returns(star.Id);
+            mockItemsRepository.Setup(m => m.GetIdOf(sataliteOne)).Returns(sataliteOne.Id);
+            mockItemsRepository.Setup(m => m.GetIdOf(sataliteTwo)).Returns(sataliteTwo.Id);
+            mockItemsRepository.Setup(m => m.Get(star.Id)).Returns(star);
+            mockItemsRepository.Setup(m => m.Get(sataliteOne.Id)).Returns(sataliteOne);
+            mockItemsRepository.Setup(m => m.Get(sataliteTwo.Id)).Returns(sataliteTwo);
+
+            var result = sut.WriteAngleToFile(star, sataliteTwo, sataliteOne, 0, 3, 1);
+
+            mockWriter.Verify(m => m.StopWriting());
+        }
+
+        [Fact]
+        public void ReturnsFalse_WhenIWriterStopWritingReturnsFalse()
+        {
+            var star = SystemOneStar;
+            var sataliteOne = SystemOneSataliteOne;
+            var sataliteTwo = SystemOneSataliteTwo;
+            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
+            mockWriter.Setup(m => m.IsWriting()).Returns(false);
+            mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
+            mockWriter.Setup(m => m.StopWriting()).Returns(false);
+            sut.SetWritePath(path);
+            mockItemsRepository.Setup(m => m.GetIdOf(star)).Returns(star.Id);
+            mockItemsRepository.Setup(m => m.GetIdOf(sataliteOne)).Returns(sataliteOne.Id);
+            mockItemsRepository.Setup(m => m.GetIdOf(sataliteTwo)).Returns(sataliteTwo.Id);
+            mockItemsRepository.Setup(m => m.Get(star.Id)).Returns(star);
+            mockItemsRepository.Setup(m => m.Get(sataliteOne.Id)).Returns(sataliteOne);
+            mockItemsRepository.Setup(m => m.Get(sataliteTwo.Id)).Returns(sataliteTwo);
+
+            var result = sut.WriteAngleToFile(star, sataliteTwo, sataliteOne, 0, 3, 1);
+
+            Assert.False(result);
+        }
+
+        [Fact]
         public void ReturnsTrue_WhenAllCorrect()
         {
             var star = SystemOneStar;
@@ -283,6 +328,7 @@ namespace Core.Test.TideCalculator
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
             mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
+            mockWriter.Setup(m => m.StopWriting()).Returns(true);
             sut.SetWritePath(path);
             mockItemsRepository.Setup(m => m.GetIdOf(star)).Returns(star.Id);
             mockItemsRepository.Setup(m => m.GetIdOf(sataliteOne)).Returns(sataliteOne.Id);
@@ -305,6 +351,7 @@ namespace Core.Test.TideCalculator
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
             mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
+            mockWriter.Setup(m => m.StopWriting()).Returns(true);
             sut.SetWritePath(path);
             mockItemsRepository.Setup(m => m.GetIdOf(star)).Returns(star.Id);
             mockItemsRepository.Setup(m => m.GetIdOf(sataliteOne)).Returns(sataliteOne.Id);
@@ -327,6 +374,7 @@ namespace Core.Test.TideCalculator
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
             mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
+            mockWriter.Setup(m => m.StopWriting()).Returns(true);
             sut.SetWritePath(path);
             mockItemsRepository.Setup(m => m.GetIdOf(star)).Returns(star.Id);
             mockItemsRepository.Setup(m => m.GetIdOf(sataliteOne)).Returns(sataliteOne.Id);
@@ -353,6 +401,7 @@ namespace Core.Test.TideCalculator
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
             mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
+            mockWriter.Setup(m => m.StopWriting()).Returns(true);
             sut.SetWritePath(path);
             mockItemsRepository.Setup(m => m.GetIdOf(star)).Returns(star.Id);
             mockItemsRepository.Setup(m => m.GetIdOf(sataliteOne)).Returns(sataliteOne.Id);
@@ -378,6 +427,7 @@ namespace Core.Test.TideCalculator
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
             mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
+            mockWriter.Setup(m => m.StopWriting()).Returns(true);
             sut.SetWritePath(path);
             mockItemsRepository.Setup(m => m.GetIdOf(star)).Returns(star.Id);
             mockItemsRepository.Setup(m => m.GetIdOf(sataliteOne)).Returns(sataliteOne.Id);
