@@ -8,7 +8,7 @@ namespace Core.Test.TideCalculator
 {
     public class TotalTidalForceAndAngle : TideCalculatorTestBase
     {
-        new double tolerance = gravitationalConstant * 0.0001;
+        new readonly double tolerance = gravitationalConstant * 0.0001;
 
         [Fact]
         public void CallsIOrbitItemRepositoryGetAll()

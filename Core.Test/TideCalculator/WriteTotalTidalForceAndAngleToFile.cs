@@ -9,6 +9,8 @@ namespace Core.Test.TideCalculator
 {
     public class WriteTotalTidalForceAndAngleToFile : TideCalculatorTestBase
     {
+        new readonly double tolerance = gravitationalConstant * 0.0001;
+
         [Fact]
         public void ReturnsFalse_WhenSetWritePathNotSet()
         {
