@@ -39,10 +39,11 @@ namespace Core.Test.TideCalculator
         {
             mockItemsRepository.Setup(m => m.Add(SystemOneOrbitItems)).Returns(true);
             mockItemsRepository.Setup(m=>m.GetAll()).Returns(SystemTwoOrbitItems);
+            mockItemsRepository.Setup(m => m.Delete(It.IsAny<Entities.OrbitItem>(), true)).Returns(true);
 
             sut.ProvideRangeToWorkWith(SystemOneOrbitItems);
 
-            mockItemsRepository.Verify(m => m.Delete(It.IsAny<Entities.OrbitItem>()));
+            mockItemsRepository.Verify(m => m.Delete(It.IsAny<Entities.OrbitItem>(), true));
         }
 
         [Fact]
@@ -50,10 +51,11 @@ namespace Core.Test.TideCalculator
         {
             mockItemsRepository.Setup(m => m.Add(SystemOneOrbitItems)).Returns(true);
             mockItemsRepository.Setup(m => m.GetAll()).Returns(SystemTwoOrbitItems);
+            mockItemsRepository.Setup(m => m.Delete(It.IsAny<Entities.OrbitItem>(), true)).Returns(true);
 
             sut.ProvideRangeToWorkWith(SystemOneOrbitItems);
 
-            mockItemsRepository.Verify(m => m.Delete(It.IsAny<Entities.OrbitItem>()), Times.Exactly(SystemTwoOrbitItems.Count()));
+            mockItemsRepository.Verify(m => m.Delete(It.IsAny<Entities.OrbitItem>(), true), Times.Exactly(SystemTwoOrbitItems.Count()));
         }
 
         [Fact]
@@ -61,15 +63,27 @@ namespace Core.Test.TideCalculator
         {
             mockItemsRepository.Setup(m => m.Add(SystemOneOrbitItems)).Returns(true);
             mockItemsRepository.Setup(m => m.GetAll()).Returns(SystemTwoOrbitItems);
+            mockItemsRepository.Setup(m => m.Delete(It.IsAny<Entities.OrbitItem>(), true)).Returns(true);
 
             sut.ProvideRangeToWorkWith(SystemOneOrbitItems);
 
-            mockItemsRepository.Verify(m => m.Delete(SystemTwoStar));
-            mockItemsRepository.Verify(m => m.Delete(SystemTwoSataliteOne));
-            mockItemsRepository.Verify(m => m.Delete(SystemTwoSataliteTwo));
-            mockItemsRepository.Verify(m => m.Delete(SystemTwoSubSataliteOne));
-            mockItemsRepository.Verify(m => m.Delete(SystemTwoSubSataliteTwo));
-            mockItemsRepository.Verify(m => m.Delete(SystemTwoSubSubSatalite));
+            mockItemsRepository.Verify(m => m.Delete(SystemTwoStar, true));
+            mockItemsRepository.Verify(m => m.Delete(SystemTwoSataliteOne, true));
+            mockItemsRepository.Verify(m => m.Delete(SystemTwoSataliteTwo, true));
+            mockItemsRepository.Verify(m => m.Delete(SystemTwoSubSataliteOne, true));
+            mockItemsRepository.Verify(m => m.Delete(SystemTwoSubSataliteTwo, true));
+            mockItemsRepository.Verify(m => m.Delete(SystemTwoSubSubSatalite, true));
+        }
+
+        [Fact]
+        public void DoesNotInvokesIOrbitItemsRepositoryDelete_IfIOrbitItemsRepositoryGetAllReturnsNothing_IfRangeCorrect()
+        {
+            mockItemsRepository.Setup(m => m.Add(SystemOneOrbitItems)).Returns(true);
+            mockItemsRepository.Setup(m => m.GetAll()).Returns([]);
+
+            sut.ProvideRangeToWorkWith(SystemOneOrbitItems);
+
+            mockItemsRepository.Verify(m => m.Delete(It.IsAny<Entities.OrbitItem>(), It.IsAny<bool>()), Times.Never());
         }
 
         [Fact]
@@ -113,7 +127,8 @@ namespace Core.Test.TideCalculator
         public void NotInvokesIOrbitItemsRepositoryGetAll_IfRangeHasNoOrbitZero()
         {
             mockItemsRepository.Setup(m => m.Add(SystemOneOrbitItems)).Returns(true);
-            sut.ProvideRangeToWorkWith(SystemOneOrbitItems);
+
+            sut.ProvideRangeToWorkWith([SystemOneSataliteOne, SystemOneSataliteTwo]);
 
             mockItemsRepository.Verify(m => m.GetAll(), Times.Never());
         }
@@ -424,7 +439,9 @@ namespace Core.Test.TideCalculator
             mockItemsRepository.Setup(m => m.GetAll()).Returns(SystemTwoOrbitItems);
             mockItemsRepository.Setup(m => m.Delete(It.IsAny<Entities.OrbitItem>())).Returns(false);
 
-            Assert.ThrowsAny<Exception>(() => sut.ProvideRangeToWorkWith(SystemOneOrbitItems));
+            var result = sut.ProvideRangeToWorkWith(SystemOneOrbitItems);
+
+            Assert.False(result);
         }
 
         [Fact]

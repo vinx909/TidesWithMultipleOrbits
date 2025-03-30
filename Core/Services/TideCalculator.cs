@@ -125,7 +125,80 @@ namespace Core.Services
 
         public bool ProvideRangeToWorkWith(IEnumerable<OrbitItem> items)
         {
-            throw new NotImplementedException();
+            //check if the values are good
+            bool orbitingIdZeroFound = false;
+            foreach (OrbitItem item in items)
+            {
+                //make sure every item eventually orbits an item that doesn't orbit
+                if(!(item.OrbitingId == 0 || FindOrigin(item.OrbitingId, item.Id)))
+                {
+                    return false;
+                }
+
+                //make sure there's only one item that doesn't orbit
+                else if(item.OrbitingId == 0)
+                {
+                    if (!orbitingIdZeroFound)
+                    {
+                        orbitingIdZeroFound = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                //make sure there's no item with the same id or same value
+                foreach(OrbitItem otherItem in items)
+                {
+                    if (item != otherItem)
+                    {
+                        if(item.Id == otherItem.Id)
+                        {
+                            return false;
+                        }
+                        else if(item.Name.Equals(otherItem.Name) && item.Mass == otherItem.Mass && item.Radius == otherItem.Radius && item.OrbitingDistance == otherItem.OrbitingDistance && item.OrbitPeriod == otherItem.OrbitPeriod)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            //see if there are old items, and if so delete them
+            foreach (OrbitItem item in orbitItemsRepository.GetAll())
+            {
+                if(!orbitItemsRepository.Delete(item, true))
+                {
+                    return false;
+                }
+            }
+
+            //add items
+            return orbitItemsRepository.Add(items);
+
+            bool FindOrigin(int id, int startId)
+            {
+                foreach (OrbitItem item in items)
+                {
+                    if (item.Id == id)
+                    {
+                        if (item.OrbitingId == 0)
+                        {
+                            return true;
+                        }
+                        else if (item.OrbitingId == startId)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            return FindOrigin(item.OrbitingId, startId);
+                        }
+                    }
+                }
+                return false;
+            }
         }
 
         public bool SetWritePath(string path)
