@@ -22,6 +22,8 @@ namespace Core.Services
         private readonly IOrbitItemsRepository orbitItemsRepository;
         private readonly IWriter writer;
 
+        private string path = string.Empty;
+
         public static string FieldSepertor { get => fieldSeperator; }
         public static string LineSeperator { get => lineSeperator; }
 
@@ -203,7 +205,16 @@ namespace Core.Services
 
         public bool SetWritePath(string path)
         {
-            throw new NotImplementedException();
+            if (!writer.IsWriting() && writer.CanWriteTo(path))
+            {
+                this.path = path;
+                return true;
+            }
+            else
+            {
+                this.path = string.Empty;
+                return false;
+            }
         }
 
         public double TidalForceBetweenTwoBodies(OrbitItem experiancer, OrbitItem excerter, int time)
@@ -260,7 +271,71 @@ namespace Core.Services
 
         public int TimeTillRestart()
         {
-            throw new NotImplementedException();
+            List<int> periods = [];
+            List<double> Angles = [];
+            int maximum = 1;
+
+            IEnumerable<OrbitItem> items = orbitItemsRepository.GetAll();
+            if(items == null || !items.Any())
+            {
+                return (int)incorecctTime;
+            }
+
+            foreach (OrbitItem item in items)
+            {
+                if (item.OrbitingId != 0)
+                {
+                    maximum *= item.OrbitPeriod;
+                    periods.Add(item.OrbitPeriod);
+                    Angles.Add(0);
+                }
+            }
+
+            //check if it's always the same due to either only 1 orbiting item or all orbits being the same
+            if(periods.Count < 2) 
+            {
+                return 0;
+            }
+            else
+            {
+                bool allTheSame = true;
+                for (int i = 1; i < periods.Count; i++)
+                {
+                    if (periods[0] != periods[i])
+                    {
+                        allTheSame = false;
+                        break;
+                    }
+                }
+                if (allTheSame)
+                {
+                    return 0;
+                }
+            }
+
+            for (int i = 1; i <= maximum; i++)
+            {
+                for (int j = 0; j < periods.Count; j++)
+                {
+                    Angles[j] = (1.0 * i / periods[j]) % 1;
+                }
+
+                bool allTheSameAngle = true;
+                for(int j = 1; j < periods.Count; j++)
+                {
+                    if (Angles[0] != Angles[j])
+                    {
+                        allTheSameAngle = false;
+                        break;
+                    }
+                }
+                if (allTheSameAngle)
+                {
+                    return i;
+                }
+            }
+
+            return (int)incorecctTime;
         }
 
         public (double, double, double, double) TotalTidalForceAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time)

@@ -18,9 +18,9 @@ namespace Core.Test.TideCalculator
         }
 
         [Fact]
-        public void ReturnsFalse_WhenIWriterIsWritingReturnsFalse()
+        public void ReturnsFalse_WhenIWriterIsWritingReturnsTrue()
         {
-            mockWriter.Setup(m => m.IsWriting()).Returns(false);
+            mockWriter.Setup(m => m.IsWriting()).Returns(true);
 
             var result = sut.SetWritePath(path);
 
