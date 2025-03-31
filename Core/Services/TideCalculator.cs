@@ -366,7 +366,28 @@ namespace Core.Services
 
         public (double, double, double, double) TotalTidalHeightAndAngle(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int time)
         {
-            throw new NotImplementedException();
+            if (!GetAll(experiancer, itemAtZeroDegrees, out List<OrbitItem> items, out OrbitItem trueExperiencer, out OrbitItem trueItemAtZeroDegrees)) { return returnIncorrect(); }
+
+            Dictionary<int, (double, double)> coordinates = GetCoordinates(items, time);
+
+            (double, double)[] heightAndAngles = new (double, double)[coordinates.Count - 1];
+
+            int index = 0;
+            foreach (OrbitItem item in items)
+            {
+                if (item != trueExperiencer)
+                {
+                    heightAndAngles[index] = (GetTidalRange(trueExperiencer, item, GetDistance(coordinates, trueExperiencer.Id, item.Id)) / 1.5, CorrectAngle(GetAngle(coordinates, trueExperiencer.Id, itemAtZeroDegrees.Id, item.Id)));
+                    index++;
+                }
+            }
+
+            return GetTotalAndAngle(heightAndAngles);
+
+            static (double, double, double, double) returnIncorrect()
+            {
+                return (incorecctHeight, incorecctHeight, incorecctHeight, incorrectAngle);
+            }
         }
 
         public bool WriteAngleToFile(OrbitItem itemCentral, OrbitItem itemAtZeroDegrees, OrbitItem itemMeasure, int initialTime, int finalTime, int timesteps)
