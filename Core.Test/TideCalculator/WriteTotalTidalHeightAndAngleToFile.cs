@@ -221,7 +221,9 @@ namespace Core.Test.TideCalculator
             sut.SetWritePath(path);
             mockItemsRepository.Setup(m => m.GetAll()).Returns(value: []);
 
-            var result = sut.WriteTotalTidalHeightAndAngleToFile(sataliteTwo, star, 0, 3, 1); DoesNotInvokeIWriterStartWriting
+            var result = sut.WriteTotalTidalHeightAndAngleToFile(sataliteTwo, star, 0, 3, 1);
+
+            mockWriter.Verify(m => m.StartWriting(path), Times.Never());
         }
 
         [Fact]
@@ -253,7 +255,7 @@ namespace Core.Test.TideCalculator
 
             var result = sut.WriteTotalTidalHeightAndAngleToFile(sataliteTwo, star, 0, 3, 1);
 
-            mockWriter.Verify(m => m.CanWriteTo(path));
+            mockWriter.Verify(m => m.StartWriting(path));
         }
 
         [Fact]

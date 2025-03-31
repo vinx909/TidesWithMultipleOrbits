@@ -348,7 +348,7 @@ namespace Core.Test.TideCalculator
 
             var result = sut.WriteDistanceBetweenToFile(sataliteOne, sataliteTwo, 0, 3, 1);
 
-            mockWriter.Verify(m => m.CanWriteTo(path));
+            mockWriter.Verify(m => m.StartWriting(path));
         }
 
         [Fact]

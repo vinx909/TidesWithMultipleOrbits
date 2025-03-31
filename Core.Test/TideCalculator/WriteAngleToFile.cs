@@ -371,7 +371,7 @@ namespace Core.Test.TideCalculator
 
             var result = sut.WriteAngleToFile(star, sataliteTwo, sataliteOne, 0, 3, 1);
 
-            mockWriter.Verify(m => m.CanWriteTo(path));
+            mockWriter.Verify(m => m.StartWriting(path));
         }
 
         [Fact]
