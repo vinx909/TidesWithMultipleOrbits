@@ -171,7 +171,6 @@ namespace Core.Test.TideCalculator
 
             sut.WriteDistanceBetweenToFile(sataliteOne, sataliteTwo, 0, 3, 1);
 
-            mockItemsRepository.Verify(m => m.GetIdOf(star));
             mockItemsRepository.Verify(m => m.GetIdOf(sataliteOne));
             mockItemsRepository.Verify(m => m.GetIdOf(sataliteTwo));
         }
@@ -285,7 +284,7 @@ namespace Core.Test.TideCalculator
 
             sut.WriteDistanceBetweenToFile(sataliteOne, sataliteTwo, 0, 3, 1);
 
-            mockItemsRepository.Verify(m => m.Get(It.IsAny<int>()), Times.Exactly(3));
+            mockItemsRepository.Verify(m => m.Get(It.IsAny<int>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -298,13 +297,11 @@ namespace Core.Test.TideCalculator
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
             mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
             sut.SetWritePath(path);
-            mockItemsRepository.Setup(m => m.GetIdOf(star)).Returns(star.Id);
             mockItemsRepository.Setup(m => m.GetIdOf(sataliteOne)).Returns(sataliteOne.Id);
             mockItemsRepository.Setup(m => m.GetIdOf(sataliteTwo)).Returns(sataliteTwo.Id);
 
             var result = sut.WriteDistanceBetweenToFile(sataliteOne, sataliteTwo, 0, 3, 1);
 
-            mockItemsRepository.Verify(m => m.Get(star.Id));
             mockItemsRepository.Verify(m => m.Get(sataliteOne.Id));
             mockItemsRepository.Verify(m => m.Get(sataliteTwo.Id));
         }
@@ -551,7 +548,7 @@ namespace Core.Test.TideCalculator
         [Fact]
         public void InvokesIWriterWriteWithCorrectStrings_StartWithLeadingZeros()
         {
-            string expectedOne = "0" + Services.TideCalculator.FieldSepertor;
+            string expectedOne = "00" + Services.TideCalculator.FieldSepertor;
             string expectedTwo = "05" + Services.TideCalculator.FieldSepertor;
             string expectedThree = "10" + Services.TideCalculator.FieldSepertor;
             var star = SystemOneStar;

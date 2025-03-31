@@ -452,7 +452,31 @@ namespace Core.Services
 
         public bool WriteDistanceBetweenToFile(OrbitItem ItemOne, OrbitItem ItemTwo, int initialTime, int finalTime, int timesteps)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(path) || writer.IsWriting() || !writer.CanWriteTo(path)) { return false; }
+
+            int? itemOneId = orbitItemsRepository.GetIdOf(ItemOne);
+            int? itemTwoId = orbitItemsRepository.GetIdOf(ItemTwo);
+
+            if (itemOneId == null || itemTwoId == null || itemOneId == itemTwoId) { return false; }
+
+            List<OrbitItem> items = GatherItems([(int)itemOneId, (int)itemTwoId]);
+
+            if (items == null || items.Count == 0) { return false; }
+
+            if (!writer.StartWriting(path)) { return false; }
+
+            Dictionary<int, (double, double)> coordiantes;
+
+            int timeLength = finalTime.ToString().Length;
+
+            for (int time = initialTime; time <= finalTime; time += timesteps)
+            {
+                coordiantes = GetCoordinates(items, time);
+
+                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetDistance(coordiantes, (int)itemOneId, (int)itemTwoId) + LineSeperator)) { return false; }
+            }
+
+            return writer.StopWriting();
         }
 
         public bool WriteTotalTidalForceAndAngleToFile(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps)
