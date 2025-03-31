@@ -109,13 +109,13 @@ namespace Core.Interfaces
         /// <summary>
         /// writes the distance between itemOne and ItemTwo to a file at different times
         /// </summary>
-        /// <param name="ItemOne"></param>
-        /// <param name="ItemTwo"></param>
+        /// <param name="itemOne"></param>
+        /// <param name="itemTwo"></param>
         /// <param name="initialTime"></param>
         /// <param name="finalTime"></param>
         /// <param name="timesteps"></param>
         /// <returns>returns true if successfully written, or false if it failed</returns>
-        public bool WriteDistanceBetweenToFile(OrbitItem ItemOne, OrbitItem ItemTwo, int initialTime, int finalTime, int timesteps);
+        public bool WriteDistanceBetweenToFile(OrbitItem itemOne, OrbitItem itemTwo, int initialTime, int finalTime, int timesteps);
 
         /// <summary>
         /// writes distance between centralItem and measureItem and the angle from itemAtZeroDegrees via centralItem to measuringItem to a file at different times
@@ -128,6 +128,28 @@ namespace Core.Interfaces
         /// <param name="timesteps"></param>
         /// <returns>returns true if successfully written, or false if it failed</returns>
         public bool WriteDistanceAndAngleBetweenToFile(OrbitItem centralItem, OrbitItem measuringItem, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps);
+
+        /// <summary>
+        /// writes the tidal force itemOne experiances due to ItemTwo between itemOne and ItemTwo to a file at different times
+        /// </summary>
+        /// <param name="itemOne"></param>
+        /// <param name="itemTwo"></param>
+        /// <param name="initialTime"></param>
+        /// <param name="finalTime"></param>
+        /// <param name="timesteps"></param>
+        /// <returns>returns true if successfully written, or false if it failed</returns>
+        public bool WriteTidalForceBetweenTwoBodiesToFile(OrbitItem itemOne, OrbitItem itemTwo, int initialTime, int finalTime, int timesteps);
+
+        /// <summary>
+        /// writes the tidal height itemOne experiances due to ItemTwo to a file at different times
+        /// </summary>
+        /// <param name="itemOne"></param>
+        /// <param name="itemTwo"></param>
+        /// <param name="initialTime"></param>
+        /// <param name="finalTime"></param>
+        /// <param name="timesteps"></param>
+        /// <returns>returns true if successfully written, or false if it failed</returns>
+        public bool WriteTidalHeightBetweenTwoBodiesToFile(OrbitItem itemOne, OrbitItem itemTwo, int initialTime, int finalTime, int timesteps);
 
         /// <summary>
         /// writes the total tidal force and angle to a file at different times
