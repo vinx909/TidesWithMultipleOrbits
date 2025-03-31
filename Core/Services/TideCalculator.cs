@@ -392,7 +392,32 @@ namespace Core.Services
 
         public bool WriteAngleToFile(OrbitItem itemCentral, OrbitItem itemAtZeroDegrees, OrbitItem itemMeasure, int initialTime, int finalTime, int timesteps)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(path) || writer.IsWriting() || !writer.CanWriteTo(path)) {return false;}
+
+            int? centralItemId = orbitItemsRepository.GetIdOf(itemCentral);
+            int? atZeroDegreesId = orbitItemsRepository.GetIdOf(itemAtZeroDegrees);
+            int? measureItemId = orbitItemsRepository.GetIdOf(itemMeasure);
+
+            if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId || atZeroDegreesId == measureItemId) { return false; }
+
+            List<OrbitItem> items = GatherItems([(int)centralItemId, (int)atZeroDegreesId, (int)measureItemId]);
+
+            if (items == null || items.Count == 0) { return false; }
+
+            if (!writer.StartWriting(path)) {  return false; }
+
+            Dictionary<int, (double, double)> coordiantes;
+
+            int timeLength = finalTime.ToString().Length;
+
+            for (int time = initialTime; time <= finalTime; time += timesteps)
+            {
+                coordiantes = GetCoordinates(items, time);
+
+                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetAngle(coordiantes, (int)centralItemId, (int)atZeroDegreesId, (int)measureItemId) + LineSeperator)) {  return false; }
+            }
+
+            return writer.StopWriting();
         }
 
         public bool WriteDistanceAndAngleBetweenToFile(OrbitItem centralItem, OrbitItem measuringItem, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps)

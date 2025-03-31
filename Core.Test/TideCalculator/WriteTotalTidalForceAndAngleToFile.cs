@@ -23,6 +23,17 @@ namespace Core.Test.TideCalculator
         }
 
         [Fact]
+        public void DoesNotInvokeIWriterStartWriting_WhenSetWritePathNotSet()
+        {
+            var star = SystemTwoStar;
+            var sataliteTwo = SystemTwoSataliteTwo;
+
+            var result = sut.WriteTotalTidalForceAndAngleToFile(sataliteTwo, star, 0, 3, 1);
+
+            mockWriter.Verify(m => m.StartWriting(path), Times.Never());
+        }
+
+        [Fact]
         public void InvokesIWriterCanWrite()
         {
             var star = SystemTwoStar;
@@ -69,6 +80,22 @@ namespace Core.Test.TideCalculator
         }
 
         [Fact]
+        public void DoesNotInvokeIWriterStartWriting_WhenIWriterCanWriteToReturnsFalse()
+        {
+            var star = SystemTwoStar;
+            var sataliteOne = SystemOneSataliteOne;
+            var sataliteTwo = SystemTwoSataliteTwo;
+            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
+            mockWriter.Setup(m => m.IsWriting()).Returns(false);
+            sut.SetWritePath(path);
+            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(false);
+
+            var result = sut.WriteTotalTidalForceAndAngleToFile(sataliteTwo, star, 0, 3, 1);
+
+            mockWriter.Verify(m => m.StartWriting(path), Times.Never());
+        }
+
+        [Fact]
         public void InvokesIWriterIsWriting()
         {
             var star = SystemTwoStar;
@@ -100,7 +127,7 @@ namespace Core.Test.TideCalculator
         }
 
         [Fact]
-        public void InvokesIWriterStartWriting()
+        public void DoesNotInvokeIWriterStartWriting_IWriterIsWritingReturnsTrue()
         {
             var star = SystemTwoStar;
             var sataliteOne = SystemOneSataliteOne;
@@ -108,41 +135,11 @@ namespace Core.Test.TideCalculator
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
             sut.SetWritePath(path);
+            mockWriter.Setup(m => m.IsWriting()).Returns(true);
 
             var result = sut.WriteTotalTidalForceAndAngleToFile(sataliteTwo, star, 0, 3, 1);
 
-            mockWriter.Verify(m => m.StartWriting(It.IsAny<string>()));
-        }
-
-        [Fact]
-        public void InvokesIWriterStartWritingWithSetPath()
-        {
-            var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
-            var sataliteTwo = SystemTwoSataliteTwo;
-            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
-            mockWriter.Setup(m => m.IsWriting()).Returns(false);
-            sut.SetWritePath(path);
-
-            var result = sut.WriteTotalTidalForceAndAngleToFile(sataliteTwo, star, 0, 3, 1);
-
-            mockWriter.Verify(m => m.CanWriteTo(path));
-        }
-
-        [Fact]
-        public void ReturnsFalse_WhenIWriterStartWriting_ReturnsFalse()
-        {
-            var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
-            var sataliteTwo = SystemTwoSataliteTwo;
-            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
-            mockWriter.Setup(m => m.IsWriting()).Returns(false);
-            sut.SetWritePath(path);
-            mockWriter.Setup(m => m.StartWriting(path)).Returns(false);
-
-            var result = sut.WriteTotalTidalForceAndAngleToFile(sataliteTwo, star, 0, 3, 1);
-
-            Assert.False(result);
+            mockWriter.Verify(m => m.StartWriting(path), Times.Never());
         }
 
         [Fact]
@@ -179,6 +176,23 @@ namespace Core.Test.TideCalculator
         }
 
         [Fact]
+        public void DoesNotInvokeIWriterStartWriting_WhenIOrbitItemsRepositoryGetAllReturnsNull()
+        {
+            var star = SystemTwoStar;
+            var sataliteOne = SystemOneSataliteOne;
+            var sataliteTwo = SystemTwoSataliteTwo;
+            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
+            mockWriter.Setup(m => m.IsWriting()).Returns(false);
+            mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
+            sut.SetWritePath(path);
+            mockItemsRepository.Setup(m => m.GetAll()).Returns(value: null);
+
+            var result = sut.WriteTotalTidalForceAndAngleToFile(sataliteTwo, star, 0, 3, 1);
+
+            mockWriter.Verify(m => m.StartWriting(path), Times.Never());
+        }
+
+        [Fact]
         public void Returnsfalse_WhenIOrbitItemsRepositoryGetAllReturnsEmpty()
         {
             var star = SystemTwoStar;
@@ -189,6 +203,72 @@ namespace Core.Test.TideCalculator
             mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
             sut.SetWritePath(path);
             mockItemsRepository.Setup(m => m.GetAll()).Returns(value: []);
+
+            var result = sut.WriteTotalTidalForceAndAngleToFile(sataliteTwo, star, 0, 3, 1);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void DoesNotInvokeIWriterStartWriting_WhenIOrbitItemsRepositoryGetAllReturnsEmpty()
+        {
+            var star = SystemTwoStar;
+            var sataliteOne = SystemOneSataliteOne;
+            var sataliteTwo = SystemTwoSataliteTwo;
+            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
+            mockWriter.Setup(m => m.IsWriting()).Returns(false);
+            mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
+            sut.SetWritePath(path);
+            mockItemsRepository.Setup(m => m.GetAll()).Returns(value: []);
+
+            var result = sut.WriteTotalTidalForceAndAngleToFile(sataliteTwo, star, 0, 3, 1);
+
+            mockWriter.Verify(m => m.StartWriting(path), Times.Never());
+        }
+
+        [Fact]
+        public void InvokesIWriterStartWriting()
+        {
+            var star = SystemTwoStar;
+            var sataliteOne = SystemOneSataliteOne;
+            var sataliteTwo = SystemTwoSataliteTwo;
+            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
+            mockWriter.Setup(m => m.IsWriting()).Returns(false);
+            sut.SetWritePath(path);
+            mockItemsRepository.Setup(m => m.GetAll()).Returns(value: [star, sataliteOne, sataliteTwo]);
+
+            var result = sut.WriteTotalTidalForceAndAngleToFile(sataliteTwo, star, 0, 3, 1);
+
+            mockWriter.Verify(m => m.StartWriting(It.IsAny<string>()));
+        }
+
+        [Fact]
+        public void InvokesIWriterStartWritingWithSetPath()
+        {
+            var star = SystemTwoStar;
+            var sataliteOne = SystemOneSataliteOne;
+            var sataliteTwo = SystemTwoSataliteTwo;
+            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
+            mockWriter.Setup(m => m.IsWriting()).Returns(false);
+            sut.SetWritePath(path);
+            mockItemsRepository.Setup(m => m.GetAll()).Returns(value: [star, sataliteOne, sataliteTwo]);
+
+            var result = sut.WriteTotalTidalForceAndAngleToFile(sataliteTwo, star, 0, 3, 1);
+
+            mockWriter.Verify(m => m.CanWriteTo(path));
+        }
+
+        [Fact]
+        public void ReturnsFalse_WhenIWriterStartWriting_ReturnsFalse()
+        {
+            var star = SystemTwoStar;
+            var sataliteOne = SystemOneSataliteOne;
+            var sataliteTwo = SystemTwoSataliteTwo;
+            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
+            mockWriter.Setup(m => m.IsWriting()).Returns(false);
+            mockWriter.Setup(m => m.StartWriting(path)).Returns(false);
+            sut.SetWritePath(path);
+            mockItemsRepository.Setup(m => m.GetAll()).Returns(value: [star, sataliteOne, sataliteTwo]);
 
             var result = sut.WriteTotalTidalForceAndAngleToFile(sataliteTwo, star, 0, 3, 1);
 
@@ -333,6 +413,32 @@ namespace Core.Test.TideCalculator
             Assert.StartsWith(expectedTwo, responces[1]);
             Assert.StartsWith(expectedThree, responces[2]);
             Assert.StartsWith(expectedFour, responces[3]);
+        }
+
+        [Fact]
+        public void InvokesIWriterWriteWithCorrectStrings_StartWithLeadingZeros()
+        {
+            string expectedOne = "00" + Services.TideCalculator.FieldSepertor;
+            string expectedTwo = "05" + Services.TideCalculator.FieldSepertor;
+            string expectedThree = "10" + Services.TideCalculator.FieldSepertor;
+            var star = SystemTwoStar;
+            var sataliteOne = SystemOneSataliteOne;
+            var sataliteTwo = SystemTwoSataliteTwo;
+            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
+            mockWriter.Setup(m => m.IsWriting()).Returns(false);
+            mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
+            mockWriter.Setup(m => m.Write(It.IsAny<string>())).Returns(true);
+            mockWriter.Setup(m => m.StopWriting()).Returns(true);
+            sut.SetWritePath(path);
+            mockItemsRepository.Setup(m => m.GetAll()).Returns(value: [star, sataliteOne, sataliteTwo]);
+            List<string> responces = [];
+            mockWriter.Setup(m => m.Write(It.IsAny<string>())).Returns(true).Callback<string>(c => responces.Add(c));
+
+            var result = sut.WriteTotalTidalForceAndAngleToFile(sataliteTwo, star, 0, 10, 5);
+
+            Assert.StartsWith(expectedOne, responces[0]);
+            Assert.StartsWith(expectedTwo, responces[1]);
+            Assert.StartsWith(expectedThree, responces[2]);
         }
 
         [Fact]
