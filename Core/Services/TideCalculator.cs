@@ -392,7 +392,7 @@ namespace Core.Services
 
         public bool WriteAngleToFile(OrbitItem centralItem, OrbitItem itemAtZeroDegrees, OrbitItem measureItem, int initialTime, int finalTime, int timesteps)
         {
-            if(string.IsNullOrEmpty(path) || writer.IsWriting() || !writer.CanWriteTo(path)) {return false;}
+            if(!CanStartWriting()) {return false;}
 
             int? centralItemId = orbitItemsRepository.GetIdOf(centralItem);
             int? atZeroDegreesId = orbitItemsRepository.GetIdOf(itemAtZeroDegrees);
@@ -406,15 +406,15 @@ namespace Core.Services
 
             if (!writer.StartWriting(path)) {  return false; }
 
-            Dictionary<int, (double, double)> coordiantes;
+            Dictionary<int, (double, double)> coordinates;
 
             int timeLength = finalTime.ToString().Length;
 
             for (int time = initialTime; time <= finalTime; time += timesteps)
             {
-                coordiantes = GetCoordinates(items, time);
+                coordinates = GetCoordinates(items, time);
 
-                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetAngle(coordiantes, (int)centralItemId, (int)atZeroDegreesId, (int)measureItemId) + LineSeperator)) {  return false; }
+                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetAngle(coordinates, (int)centralItemId, (int)atZeroDegreesId, (int)measureItemId) + LineSeperator)) {  return false; }
             }
 
             return writer.StopWriting();
@@ -422,7 +422,7 @@ namespace Core.Services
 
         public bool WriteDistanceAndAngleBetweenToFile(OrbitItem centralItem, OrbitItem measuringItem, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps)
         {
-            if (string.IsNullOrEmpty(path) || writer.IsWriting() || !writer.CanWriteTo(path)) { return false; }
+            if (!CanStartWriting()) { return false; }
 
             int? centralItemId = orbitItemsRepository.GetIdOf(centralItem);
             int? atZeroDegreesId = orbitItemsRepository.GetIdOf(itemAtZeroDegrees);
@@ -436,23 +436,23 @@ namespace Core.Services
 
             if (!writer.StartWriting(path)) { return false; }
 
-            Dictionary<int, (double, double)> coordiantes;
+            Dictionary<int, (double, double)> coordinates;
 
             int timeLength = finalTime.ToString().Length;
 
             for (int time = initialTime; time <= finalTime; time += timesteps)
             {
-                coordiantes = GetCoordinates(items, time);
+                coordinates = GetCoordinates(items, time);
 
-                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetDistance(coordiantes, (int)centralItemId, (int)measureItemId) + FieldSepertor + GetAngle(coordiantes, (int)centralItemId, (int)atZeroDegreesId, (int)measureItemId) + LineSeperator)) { return false; }
+                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetDistance(coordinates, (int)centralItemId, (int)measureItemId) + FieldSepertor + GetAngle(coordinates, (int)centralItemId, (int)atZeroDegreesId, (int)measureItemId) + LineSeperator)) { return false; }
             }
 
             return writer.StopWriting();
         }
-
+        
         public bool WriteDistanceBetweenToFile(OrbitItem ItemOne, OrbitItem ItemTwo, int initialTime, int finalTime, int timesteps)
         {
-            if (string.IsNullOrEmpty(path) || writer.IsWriting() || !writer.CanWriteTo(path)) { return false; }
+            if (!CanStartWriting()) { return false; }
 
             int? itemOneId = orbitItemsRepository.GetIdOf(ItemOne);
             int? itemTwoId = orbitItemsRepository.GetIdOf(ItemTwo);
@@ -481,7 +481,35 @@ namespace Core.Services
 
         public bool WriteTotalTidalForceAndAngleToFile(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps)
         {
-            throw new NotImplementedException();
+            if (!CanStartWriting() || !GetAll(experiancer, itemAtZeroDegrees, out List<OrbitItem> items, out OrbitItem trueExperiencer, out OrbitItem trueItemAtZeroDegrees) || !writer.StartWriting(path)) { return false; }
+
+            Dictionary<int, (double, double)> coordinates;
+
+            (double, double)[] forcesAndAngles = new (double, double)[items.Count - 1];
+            int index;
+
+            int timeLength = finalTime.ToString().Length;
+
+            for (int time = initialTime; time <= finalTime; time += timesteps)
+            {
+                coordinates = GetCoordinates(items, time);
+
+                index = 0;
+                foreach (OrbitItem item in items)
+                {
+                    if (item != trueExperiencer)
+                    {
+                        forcesAndAngles[index] = (GetTidalForce(trueExperiencer, item, GetDistance(coordinates, trueExperiencer.Id, item.Id)), CorrectAngle(GetAngle(coordinates, trueExperiencer.Id, itemAtZeroDegrees.Id, item.Id)));
+                        index++;
+                    }
+                }
+
+                (double, double, double, double) totalForcesAndAngle = GetTotalAndAngle(forcesAndAngles);
+
+                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + totalForcesAndAngle.Item1 + FieldSepertor + totalForcesAndAngle.Item2 + FieldSepertor + totalForcesAndAngle.Item3 + FieldSepertor + totalForcesAndAngle.Item4 + LineSeperator)) { return false; }
+            }
+
+            return writer.StopWriting();
         }
 
         public bool WriteTotalTidalHeightAndAngleToFile(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps)
@@ -723,6 +751,11 @@ namespace Core.Services
             {
                 return (totalAtAnlge, totalPerpendicularToAngle, totalAtPole, angle);
             }
+        }
+
+        private bool CanStartWriting()
+        {
+            return !string.IsNullOrEmpty(path) && !writer.IsWriting() && writer.CanWriteTo(path);
         }
     }
 }

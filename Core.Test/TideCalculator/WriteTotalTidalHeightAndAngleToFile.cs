@@ -162,7 +162,7 @@ namespace Core.Test.TideCalculator
         public void Returnsfalse_WhenIOrbitItemsRepositoryGetAllReturnsNull()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -179,7 +179,7 @@ namespace Core.Test.TideCalculator
         public void DoesNotInvokeIWriterStartWriting_WhenIOrbitItemsRepositoryGetAllReturnsNull()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -196,7 +196,7 @@ namespace Core.Test.TideCalculator
         public void Returnsfalse_WhenIOrbitItemsRepositoryGetAllReturnsEmpty()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -213,7 +213,7 @@ namespace Core.Test.TideCalculator
         public void DoesNotInvokeIWriterStartWriting_WhenIOrbitItemsRepositoryGetAllReturnsEmpty()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -279,7 +279,7 @@ namespace Core.Test.TideCalculator
         public void ReturnsFalse_WhenIWriterWriteReturnsFalse()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -297,7 +297,7 @@ namespace Core.Test.TideCalculator
         public void CallsIWriterStopWriting()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -315,7 +315,7 @@ namespace Core.Test.TideCalculator
         public void ReturnsFalse_WhenIWriterStopWritingReturnsFalse()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -334,7 +334,7 @@ namespace Core.Test.TideCalculator
         public void ReturnsTrue_WhenAllCorrect()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -353,7 +353,7 @@ namespace Core.Test.TideCalculator
         public void InvokesIWriterWrite()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -372,7 +372,7 @@ namespace Core.Test.TideCalculator
         public void InvokesIWriterWriteCorrectAmountOfTimes()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -395,7 +395,7 @@ namespace Core.Test.TideCalculator
             string expectedThree = "2" + Services.TideCalculator.FieldSepertor;
             string expectedFour = "3" + Services.TideCalculator.FieldSepertor;
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -422,7 +422,7 @@ namespace Core.Test.TideCalculator
             string expectedTwo = "05" + Services.TideCalculator.FieldSepertor;
             string expectedThree = "10" + Services.TideCalculator.FieldSepertor;
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -446,7 +446,7 @@ namespace Core.Test.TideCalculator
         {
             string expected = Services.TideCalculator.LineSeperator;
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -469,9 +469,10 @@ namespace Core.Test.TideCalculator
         [Fact]
         public void InvokesIWriterWriteWithCorrectStrings_CorrectNumberOfSeperators()
         {
-            int expected = 5;
+            string seperator = Services.TideCalculator.FieldSepertor;
+            int expected = 4;
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
@@ -479,28 +480,24 @@ namespace Core.Test.TideCalculator
             mockWriter.Setup(m => m.Write(It.IsAny<string>())).Returns(true);
             mockWriter.Setup(m => m.StopWriting()).Returns(true);
             sut.SetWritePath(path);
-            mockItemsRepository.Setup(m => m.GetIdOf(star)).Returns(star.Id);
-            mockItemsRepository.Setup(m => m.GetIdOf(sataliteOne)).Returns(sataliteOne.Id);
-            mockItemsRepository.Setup(m => m.GetIdOf(sataliteTwo)).Returns(sataliteTwo.Id);
-            mockItemsRepository.Setup(m => m.Get(star.Id)).Returns(star);
-            mockItemsRepository.Setup(m => m.Get(sataliteOne.Id)).Returns(sataliteOne);
-            mockItemsRepository.Setup(m => m.Get(sataliteTwo.Id)).Returns(sataliteTwo);
+            mockItemsRepository.Setup(m => m.GetAll()).Returns(value: [star, sataliteOne, sataliteTwo]);
             List<string> responces = [];
             mockWriter.Setup(m => m.Write(It.IsAny<string>())).Returns(true).Callback<string>(c => responces.Add(c));
 
             var result = sut.WriteTotalTidalHeightAndAngleToFile(sataliteTwo, star, 0, 3, 1);
 
-            Assert.Equal(expected, responces[0].Count(c => c.Equals(Services.TideCalculator.FieldSepertor)));
-            Assert.Equal(expected, responces[1].Count(c => c.Equals(Services.TideCalculator.FieldSepertor)));
-            Assert.Equal(expected, responces[2].Count(c => c.Equals(Services.TideCalculator.FieldSepertor)));
-            Assert.Equal(expected, responces[3].Count(c => c.Equals(Services.TideCalculator.FieldSepertor)));
+            for (int i = 0; i < responces.Count; i++)
+            {
+                int numberOfSeperator = (responces[i].Length - responces[i].Replace(seperator, "").Length) / seperator.Length;
+                Assert.Equal(expected, numberOfSeperator);
+            }
         }
 
         [Fact]
         public void InvokesIWriterWriteWithCorrectStrings_ValueOneLessWhenFurtherAway_WhenInLine()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             double expectedOne = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) * 3 / 5;
             double expectedTwo = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) * 3 / 5;
@@ -523,7 +520,7 @@ namespace Core.Test.TideCalculator
         public void InvokesIWriterWriteWithCorrectStrings_ValueOne_WhenInLine()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             double expectedOne = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) * 3 / 5;
             double expectedTwo = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) * 3 / 5;
@@ -547,7 +544,7 @@ namespace Core.Test.TideCalculator
         public void InvokesIWriterWriteWithCorrectStrings_ValueTwoEqualToThree_WhenInLine()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             double expectedOne = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) * -2 / 3;
             double expectedTwo = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) * -2 / 3;
@@ -571,7 +568,7 @@ namespace Core.Test.TideCalculator
         public void InvokesIWriterWriteWithCorrectStrings_ValueTwo_WhenInLine()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             double expectedOne = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) * -2 / 3;
             double expectedTwo = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) * -2 / 3;
@@ -595,7 +592,7 @@ namespace Core.Test.TideCalculator
         public void InvokesIWriterWriteWithCorrectStrings_ValueTwoLessThenOne_WhenNotInLine()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             double expectedOne = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) * -2 / 3;
             double expectedTwo = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) * -2 / 3;
@@ -611,15 +608,15 @@ namespace Core.Test.TideCalculator
 
             var result = sut.WriteTotalTidalHeightAndAngleToFile(sataliteTwo, star, 0, 3, 1);
 
-            Assert.True(double.Parse(responces[0].Split(Services.TideCalculator.FieldSepertor)[2]) < double.Parse(responces[0].Split(Services.TideCalculator.FieldSepertor)[1]));
-            Assert.True(double.Parse(responces[2].Split(Services.TideCalculator.FieldSepertor)[2]) < double.Parse(responces[0].Split(Services.TideCalculator.FieldSepertor)[1]));
+            Assert.True(double.Parse(responces[1].Split(Services.TideCalculator.FieldSepertor)[2]) < double.Parse(responces[0].Split(Services.TideCalculator.FieldSepertor)[1]));
+            Assert.True(double.Parse(responces[3].Split(Services.TideCalculator.FieldSepertor)[2]) < double.Parse(responces[0].Split(Services.TideCalculator.FieldSepertor)[1]));
         }
 
         [Fact]
         public void InvokesIWriterWriteWithCorrectStrings_ValueTwoMoreThenThree_WhenNotInLine()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             double expectedOne = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) * -2 / 3;
             double expectedTwo = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) * -2 / 3;
@@ -635,15 +632,15 @@ namespace Core.Test.TideCalculator
 
             var result = sut.WriteTotalTidalHeightAndAngleToFile(sataliteTwo, star, 0, 3, 1);
 
-            Assert.True(double.Parse(responces[0].Split(Services.TideCalculator.FieldSepertor)[2]) > double.Parse(responces[0].Split(Services.TideCalculator.FieldSepertor)[3]));
-            Assert.True(double.Parse(responces[2].Split(Services.TideCalculator.FieldSepertor)[2]) > double.Parse(responces[0].Split(Services.TideCalculator.FieldSepertor)[3]));
+            Assert.True(double.Parse(responces[1].Split(Services.TideCalculator.FieldSepertor)[2]) > double.Parse(responces[0].Split(Services.TideCalculator.FieldSepertor)[3]));
+            Assert.True(double.Parse(responces[3].Split(Services.TideCalculator.FieldSepertor)[2]) > double.Parse(responces[0].Split(Services.TideCalculator.FieldSepertor)[3]));
         }
 
         [Fact]
         public void InvokesIWriterWriteWithCorrectStrings_ValueThree()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             double expectedOne = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) * -2 / 3;
             double expectedTwo = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, Math.Pow(Math.Pow(sataliteTwo.OrbitingDistance, 2) + Math.Pow(sataliteOne.OrbitingDistance, 2), 0.5))) * -2 / 3;
@@ -671,7 +668,7 @@ namespace Core.Test.TideCalculator
         public void InvokesIWriterWriteWithCorrectStrings_ValueFourIsZero_WhenInLine()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             double expected = 0;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
@@ -694,7 +691,7 @@ namespace Core.Test.TideCalculator
         public void InvokesIWriterWriteWithCorrectStrings_ValueFourBiggerOrSmallerThenZero_WhenNotInLine()
         {
             var star = SystemTwoStar;
-            var sataliteOne = SystemOneSataliteOne;
+            var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);

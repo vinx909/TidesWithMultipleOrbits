@@ -610,6 +610,38 @@ namespace Core.Test.TideCalculator
         }
 
         [Fact]
+        public void InvokesIWriterWriteWithCorrectStrings_CorrectNumberOfSeperators()
+        {
+            string seperator = Services.TideCalculator.FieldSepertor;
+            int expected = 1;
+            var star = SystemOneStar;
+            var sataliteOne = SystemOneSataliteOne;
+            var sataliteTwo = SystemOneSataliteTwo;
+            mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
+            mockWriter.Setup(m => m.IsWriting()).Returns(false);
+            mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
+            mockWriter.Setup(m => m.Write(It.IsAny<string>())).Returns(true);
+            mockWriter.Setup(m => m.StopWriting()).Returns(true);
+            sut.SetWritePath(path);
+            mockItemsRepository.Setup(m => m.GetIdOf(star)).Returns(star.Id);
+            mockItemsRepository.Setup(m => m.GetIdOf(sataliteOne)).Returns(sataliteOne.Id);
+            mockItemsRepository.Setup(m => m.GetIdOf(sataliteTwo)).Returns(sataliteTwo.Id);
+            mockItemsRepository.Setup(m => m.Get(star.Id)).Returns(star);
+            mockItemsRepository.Setup(m => m.Get(sataliteOne.Id)).Returns(sataliteOne);
+            mockItemsRepository.Setup(m => m.Get(sataliteTwo.Id)).Returns(sataliteTwo);
+            List<string> responces = new();
+            mockWriter.Setup(m => m.Write(It.IsAny<string>())).Returns(true).Callback<string>(c => responces.Add(c));
+
+            var result = sut.WriteAngleToFile(star, sataliteTwo, sataliteOne, 0, 3, 1);
+
+            for (int i = 0; i < responces.Count; i++)
+            {
+                int numberOfSeperator = (responces[i].Length - responces[i].Replace(seperator, "").Length) / seperator.Length;
+                Assert.Equal(expected, numberOfSeperator);
+            }
+        }
+
+        [Fact]
         public void InvokesIWriterWriteWithCorrectStrings_Value()
         {
             double expectedOne = Math.Acos(1);
