@@ -468,6 +468,65 @@ namespace Core.Services
             return writer.StopWriting();
         }
 
+        public bool WriteDistanceAndAngleBetweenToFile(OrbitItem centralItem, OrbitItem measuringItem, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps)
+        {
+            if (!CanStartWriting()) { return false; }
+
+            int? centralItemId = orbitItemsRepository.GetIdOf(centralItem);
+            int? atZeroDegreesId = orbitItemsRepository.GetIdOf(itemAtZeroDegrees);
+            int? measureItemId = orbitItemsRepository.GetIdOf(measuringItem);
+
+            if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId) { return false; }
+
+            List<OrbitItem> items = GatherItems([(int)centralItemId, (int)atZeroDegreesId, (int)measureItemId]);
+
+            if (items == null || items.Count == 0) { return false; }
+
+            if (!writer.StartWriting(path)) { return false; }
+
+            Dictionary<int, (double, double)> coordinates;
+
+            int timeLength = finalTime.ToString().Length;
+
+            for (int time = initialTime; time <= finalTime; time += timesteps)
+            {
+                coordinates = GetCoordinates(items, time);
+
+                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetDistance(coordinates, (int)centralItemId, (int)measureItemId) + FieldSepertor + GetAngle(coordinates, (int)centralItemId, (int)atZeroDegreesId, (int)measureItemId) + LineSeperator)) { return false; }
+            }
+
+            return writer.StopWriting();
+        }
+
+        public bool WriteDistanceBetweenToFile(OrbitItem ItemOne, OrbitItem ItemTwo, int initialTime, int finalTime, int timesteps)
+        {
+            if (!CanStartWriting()) { return false; }
+
+            int? itemOneId = orbitItemsRepository.GetIdOf(ItemOne);
+            int? itemTwoId = orbitItemsRepository.GetIdOf(ItemTwo);
+
+            if (itemOneId == null || itemTwoId == null || itemOneId == itemTwoId) { return false; }
+
+            List<OrbitItem> items = GatherItems([(int)itemOneId, (int)itemTwoId]);
+
+            if (items == null || items.Count == 0) { return false; }
+
+            if (!writer.StartWriting(path)) { return false; }
+
+            Dictionary<int, (double, double)> coordiantes;
+
+            int timeLength = finalTime.ToString().Length;
+
+            for (int time = initialTime; time <= finalTime; time += timesteps)
+            {
+                coordiantes = GetCoordinates(items, time);
+
+                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetDistance(coordiantes, (int)itemOneId, (int)itemTwoId) + LineSeperator)) { return false; }
+            }
+
+            return writer.StopWriting();
+        }
+
         public bool WriteTotalTidalForceAndAngleToFile(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps)
         {
             if (!CanStartWriting() || !GetAll(experiancer, itemAtZeroDegrees, out List<OrbitItem> items, out OrbitItem trueExperiencer, out OrbitItem trueItemAtZeroDegrees) || !writer.StartWriting(path)) { return false; }
@@ -570,50 +629,10 @@ namespace Core.Services
 
         public bool WriteTidalForceBetweenTwoBodiesToFile(OrbitItem itemOne, OrbitItem itemTwo, int initialTime, int finalTime, int timesteps)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool WriteTidalHeightBetweenTwoBodiesToFile(OrbitItem itemOne, OrbitItem itemTwo, int initialTime, int finalTime, int timesteps)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool WriteDistanceAndAngleBetweenToFile(OrbitItem centralItem, OrbitItem measuringItem, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps)
-        {
             if (!CanStartWriting()) { return false; }
 
-            int? centralItemId = orbitItemsRepository.GetIdOf(centralItem);
-            int? atZeroDegreesId = orbitItemsRepository.GetIdOf(itemAtZeroDegrees);
-            int? measureItemId = orbitItemsRepository.GetIdOf(measuringItem);
-
-            if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId) { return false; }
-
-            List<OrbitItem> items = GatherItems([(int)centralItemId, (int)atZeroDegreesId, (int)measureItemId]);
-
-            if (items == null || items.Count == 0) { return false; }
-
-            if (!writer.StartWriting(path)) { return false; }
-
-            Dictionary<int, (double, double)> coordinates;
-
-            int timeLength = finalTime.ToString().Length;
-
-            for (int time = initialTime; time <= finalTime; time += timesteps)
-            {
-                coordinates = GetCoordinates(items, time);
-
-                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetDistance(coordinates, (int)centralItemId, (int)measureItemId) + FieldSepertor + GetAngle(coordinates, (int)centralItemId, (int)atZeroDegreesId, (int)measureItemId) + LineSeperator)) { return false; }
-            }
-
-            return writer.StopWriting();
-        }
-
-        public bool WriteDistanceBetweenToFile(OrbitItem ItemOne, OrbitItem ItemTwo, int initialTime, int finalTime, int timesteps)
-        {
-            if (!CanStartWriting()) { return false; }
-
-            int? itemOneId = orbitItemsRepository.GetIdOf(ItemOne);
-            int? itemTwoId = orbitItemsRepository.GetIdOf(ItemTwo);
+            int? itemOneId = orbitItemsRepository.GetIdOf(itemOne);
+            int? itemTwoId = orbitItemsRepository.GetIdOf(itemTwo);
 
             if (itemOneId == null || itemTwoId == null || itemOneId == itemTwoId) { return false; }
 
@@ -631,7 +650,36 @@ namespace Core.Services
             {
                 coordiantes = GetCoordinates(items, time);
 
-                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetDistance(coordiantes, (int)itemOneId, (int)itemTwoId) + LineSeperator)) { return false; }
+                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetTidalForce(itemOne, itemTwo, GetDistance(coordiantes, (int)itemOneId, (int)itemTwoId)) + LineSeperator)) { return false; }
+            }
+
+            return writer.StopWriting();
+        }
+
+        public bool WriteTidalHeightBetweenTwoBodiesToFile(OrbitItem itemOne, OrbitItem itemTwo, int initialTime, int finalTime, int timesteps)
+        {
+            if (!CanStartWriting()) { return false; }
+
+            int? itemOneId = orbitItemsRepository.GetIdOf(itemOne);
+            int? itemTwoId = orbitItemsRepository.GetIdOf(itemTwo);
+
+            if (itemOneId == null || itemTwoId == null || itemOneId == itemTwoId) { return false; }
+
+            List<OrbitItem> items = GatherItems([(int)itemOneId, (int)itemTwoId]);
+
+            if (items == null || items.Count == 0) { return false; }
+
+            if (!writer.StartWriting(path)) { return false; }
+
+            Dictionary<int, (double, double)> coordiantes;
+
+            int timeLength = finalTime.ToString().Length;
+
+            for (int time = initialTime; time <= finalTime; time += timesteps)
+            {
+                coordiantes = GetCoordinates(items, time);
+
+                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetTidalRange(itemOne, itemTwo, GetDistance(coordiantes, (int)itemOneId, (int)itemTwoId)) + LineSeperator)) { return false; }
             }
 
             return writer.StopWriting();
