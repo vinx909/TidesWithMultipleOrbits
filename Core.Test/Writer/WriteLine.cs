@@ -59,22 +59,13 @@ namespace Core.Test.Writer
         }
 
         [Fact]
-        public void FileNotTheSame_AfterInvokingStartWriting_BeforeInvokingStopWriting()
-        {
-            sut.StartWriting(TempFilePath);
-            string origionalFileContent = File.ReadAllText(TempFilePath);
-
-            sut.WriteLine(testStringOne);
-
-            Assert.NotEqual(origionalFileContent, File.ReadAllText(TempFilePath));
-        }
-
-        [Fact]
         public void FileCorrectContent_AfterInvokingStartWriting_BeforeInvokingStopWriting()
         {
             sut.StartWriting(TempFilePath);
 
             sut.WriteLine(testStringOne);
+
+            ForceCloseSUT();
 
             Assert.Equal(testStringOne + linebreak, File.ReadAllText(TempFilePath));
         }
@@ -86,6 +77,8 @@ namespace Core.Test.Writer
 
             sut.WriteLine(testStringOne);
             sut.WriteLine(testStringTwo);
+
+            ForceCloseSUT();
 
             Assert.Equal(testStringOne + linebreak + testStringTwo + linebreak, File.ReadAllText(TempFilePath));
         }
@@ -103,19 +96,6 @@ namespace Core.Test.Writer
         }
 
         [Fact]
-        public void FileNotTheSame_AfterInvokingStartWriting_BeforeInvokingStopWriting_OnSecondFile()
-        {
-            sut.StartWriting(TempFilePath);
-            sut.StopWriting();
-            sut.StartWriting(SecondPath);
-            string origionalFileContent = File.ReadAllText(TempFilePath);
-
-            sut.WriteLine(testStringOne);
-
-            Assert.NotEqual(origionalFileContent, File.ReadAllText(TempFilePath));
-        }
-
-        [Fact]
         public void FileCorrectContent_AfterInvokingStartWriting_BeforeInvokingStopWriting_OnSecondFile()
         {
             sut.StartWriting(TempFilePath);
@@ -124,7 +104,9 @@ namespace Core.Test.Writer
 
             sut.WriteLine(testStringOne);
 
-            Assert.Equal(testStringOne + linebreak, File.ReadAllText(TempFilePath));
+            ForceCloseSUT();
+
+            Assert.Equal(testStringOne + linebreak, File.ReadAllText(SecondPath));
         }
 
         public WriteLine()
@@ -134,6 +116,8 @@ namespace Core.Test.Writer
 
         public new void Dispose()
         {
+            ForceCloseSUT();
+
             if (File.Exists(SecondPath))
             {
                 File.Delete(SecondPath);

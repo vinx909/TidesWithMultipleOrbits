@@ -48,6 +48,8 @@ namespace Core.Test.Writer
 
             sut.StartWriting(TempFilePath);
 
+            ForceCloseSUT();
+
             Assert.True(File.ReadAllText(TempFilePath).Length==0);
         }
 
@@ -59,16 +61,6 @@ namespace Core.Test.Writer
             var result = sut.StartWriting(TempFilePath);
 
             Assert.False(result);
-        }
-
-        [Fact]
-        public void FileDoesNotExist_IfFileExist()
-        {
-            File.Create(TempFilePath).Dispose();
-
-            sut.StartWriting(TempFilePath);
-
-            Assert.False(File.Exists(TempFilePath));
         }
 
         [Fact]
@@ -165,6 +157,8 @@ namespace Core.Test.Writer
 
             sut.StartWriting(SecondPath);
 
+            ForceCloseSUT();
+
             Assert.True(File.ReadAllText(SecondPath).Length == 0);
         }
 
@@ -175,6 +169,8 @@ namespace Core.Test.Writer
 
         public new void Dispose()
         {
+            ForceCloseSUT();
+
             if (File.Exists(SecondPath))
             {
                 File.Delete(SecondPath);

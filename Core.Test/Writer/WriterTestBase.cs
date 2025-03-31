@@ -35,7 +35,17 @@ namespace Core.Test.Writer
         {
             if (File.Exists(TempFilePath))
             {
+                ForceCloseSUT();
                 File.Delete(TempFilePath);
+            }
+        }
+
+        protected void ForceCloseSUT()
+        {
+            if (sut is IDisposable)
+            {
+                IDisposable? system = sut as IDisposable;
+                system.Dispose();
             }
         }
     }

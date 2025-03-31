@@ -7,36 +7,87 @@ using System.Threading.Tasks;
 
 namespace Core.Services
 {
-    public class Writer : IWriter
+    public class Writer : IWriter, IDisposable
     {
+        private const char fileFolderSeperator = '\\';
+
+        private StreamWriter? fileWriter;
+
+        public Writer()
+        {
+            fileWriter = null;
+        }
+
+        public void Dispose()
+        {
+            if (fileWriter != null)
+            {
+                fileWriter.Dispose();
+                fileWriter.Close();
+            }
+        }
+
         public bool CanWriteTo(string path)
         {
-            throw new NotImplementedException();
+            return !File.Exists(path) && Directory.Exists(path.Substring(0, path.Length - path.Split(fileFolderSeperator).Last().Length-1));
         }
 
         public bool IsWriting()
         {
-            throw new NotImplementedException();
+            return fileWriter != null;
         }
 
         public bool StartWriting(string path)
         {
-            throw new NotImplementedException();
+            if (!IsWriting() && CanWriteTo(path))
+            {
+                fileWriter = new(path);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public bool StopWriting()
         {
-            throw new NotImplementedException();
+            if(fileWriter == null)
+            {
+                return true;
+            }
+            else
+            {
+                fileWriter.Dispose();
+                fileWriter = null;
+                return true;
+            }
         }
 
         public bool Write(string text)
         {
-            throw new NotImplementedException();
+            if(fileWriter != null)
+            {
+                fileWriter.Write(text);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public bool WriteLine(string text)
         {
-            throw new NotImplementedException();
+            if (fileWriter != null)
+            {
+                fileWriter.WriteLine(text);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

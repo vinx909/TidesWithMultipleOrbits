@@ -48,7 +48,7 @@ namespace Core.Test.Writer
             }
             testPath += notExistingFile;
 
-            var result = sut.CanWriteTo(TempFilePath);
+            var result = sut.CanWriteTo(testPath);
 
             Assert.False(result);
         }

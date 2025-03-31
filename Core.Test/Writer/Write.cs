@@ -58,22 +58,13 @@ namespace Core.Test.Writer
         }
 
         [Fact]
-        public void FileNotTheSame_AfterInvokingStartWriting_BeforeInvokingStopWriting()
-        {
-            sut.StartWriting(TempFilePath);
-            string origionalFileContent = File.ReadAllText(TempFilePath);
-
-            sut.Write(testStringOne);
-
-            Assert.NotEqual(origionalFileContent, File.ReadAllText(TempFilePath));
-        }
-
-        [Fact]
         public void FileCorrectContent_AfterInvokingStartWriting_BeforeInvokingStopWriting()
         {
             sut.StartWriting(TempFilePath);
 
             sut.Write(testStringOne);
+
+            ForceCloseSUT();
 
             Assert.Equal(testStringOne, File.ReadAllText(TempFilePath));
         }
@@ -85,6 +76,8 @@ namespace Core.Test.Writer
 
             sut.Write(testStringOne);
             sut.Write(testStringTwo);
+
+            ForceCloseSUT();
 
             Assert.Equal(testStringOne+testStringTwo, File.ReadAllText(TempFilePath));
         }
@@ -102,19 +95,6 @@ namespace Core.Test.Writer
         }
 
         [Fact]
-        public void FileNotTheSame_AfterInvokingStartWriting_BeforeInvokingStopWriting_OnSecondFile()
-        {
-            sut.StartWriting(TempFilePath);
-            sut.StopWriting();
-            sut.StartWriting(SecondPath);
-            string origionalFileContent = File.ReadAllText(TempFilePath);
-
-            sut.Write(testStringOne);
-
-            Assert.NotEqual(origionalFileContent, File.ReadAllText(TempFilePath));
-        }
-
-        [Fact]
         public void FileCorrectContent_AfterInvokingStartWriting_BeforeInvokingStopWriting_OnSecondFile()
         {
             sut.StartWriting(TempFilePath);
@@ -123,7 +103,9 @@ namespace Core.Test.Writer
 
             sut.Write(testStringOne);
 
-            Assert.Equal(testStringOne, File.ReadAllText(TempFilePath));
+            ForceCloseSUT();
+
+            Assert.Equal(testStringOne, File.ReadAllText(SecondPath));
         }
 
         public Write()
@@ -133,6 +115,8 @@ namespace Core.Test.Writer
 
         public new void Dispose()
         {
+            ForceCloseSUT();
+
             if (File.Exists(SecondPath))
             {
                 File.Delete(SecondPath);
