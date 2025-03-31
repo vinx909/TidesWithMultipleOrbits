@@ -499,8 +499,6 @@ namespace Core.Test.TideCalculator
             var star = SystemTwoStar;
             var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
-            double expectedOne = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) * 3 / 5;
-            double expectedTwo = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) * 3 / 5;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
             mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
@@ -570,8 +568,8 @@ namespace Core.Test.TideCalculator
             var star = SystemTwoStar;
             var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
-            double expectedOne = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) * -2 / 3;
-            double expectedTwo = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) * -2 / 3;
+            double expectedOne = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) / -3;
+            double expectedTwo = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) / -3;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
             mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
@@ -594,8 +592,6 @@ namespace Core.Test.TideCalculator
             var star = SystemTwoStar;
             var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
-            double expectedOne = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) * -2 / 3;
-            double expectedTwo = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) * -2 / 3;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
             mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
@@ -618,8 +614,6 @@ namespace Core.Test.TideCalculator
             var star = SystemTwoStar;
             var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
-            double expectedOne = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) * -2 / 3;
-            double expectedTwo = -(GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) * -2 / 3;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);
             mockWriter.Setup(m => m.StartWriting(path)).Returns(true);
@@ -642,9 +636,9 @@ namespace Core.Test.TideCalculator
             var star = SystemTwoStar;
             var sataliteOne = SystemTwoSataliteOne;
             var sataliteTwo = SystemTwoSataliteTwo;
-            double expectedOne = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) * -2 / 3;
-            double expectedTwo = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, Math.Pow(Math.Pow(sataliteTwo.OrbitingDistance, 2) + Math.Pow(sataliteOne.OrbitingDistance, 2), 0.5))) * -2 / 3;
-            double expectedThree = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) * -2 / 3;
+            double expectedOne = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance - sataliteOne.OrbitingDistance)) / -3;
+            double expectedTwo = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, Math.Pow(Math.Pow(sataliteTwo.OrbitingDistance, 2) + Math.Pow(sataliteOne.OrbitingDistance, 2), 0.5))) / -3;
+            double expectedThree = (GetTidalHeight(star.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance) + GetTidalHeight(sataliteOne.Mass, sataliteTwo.Mass, sataliteTwo.Radius, sataliteTwo.OrbitingDistance + sataliteOne.OrbitingDistance)) / -3;
             double expectedFour = expectedTwo;
             mockWriter.Setup(m => m.CanWriteTo(path)).Returns(true);
             mockWriter.Setup(m => m.IsWriting()).Returns(false);

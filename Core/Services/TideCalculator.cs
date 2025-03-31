@@ -514,7 +514,35 @@ namespace Core.Services
 
         public bool WriteTotalTidalHeightAndAngleToFile(OrbitItem experiancer, OrbitItem itemAtZeroDegrees, int initialTime, int finalTime, int timesteps)
         {
-            throw new NotImplementedException();
+            if (!CanStartWriting() || !GetAll(experiancer, itemAtZeroDegrees, out List<OrbitItem> items, out OrbitItem trueExperiencer, out OrbitItem trueItemAtZeroDegrees) || !writer.StartWriting(path)) { return false; }
+
+            Dictionary<int, (double, double)> coordinates;
+
+            (double, double)[] heightAndAngles = new (double, double)[items.Count - 1];
+            int index;
+
+            int timeLength = finalTime.ToString().Length;
+
+            for (int time = initialTime; time <= finalTime; time += timesteps)
+            {
+                coordinates = GetCoordinates(items, time);
+
+                index = 0;
+                foreach (OrbitItem item in items)
+                {
+                    if (item != trueExperiencer)
+                    {
+                        heightAndAngles[index] = (GetTidalRange(trueExperiencer, item, GetDistance(coordinates, trueExperiencer.Id, item.Id)) / 1.5, CorrectAngle(GetAngle(coordinates, trueExperiencer.Id, itemAtZeroDegrees.Id, item.Id)));
+                        index++;
+                    }
+                }
+
+                (double, double, double, double) totalForcesAndAngle = GetTotalAndAngle(heightAndAngles);
+
+                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + totalForcesAndAngle.Item1 + FieldSepertor + totalForcesAndAngle.Item2 + FieldSepertor + totalForcesAndAngle.Item3 + FieldSepertor + totalForcesAndAngle.Item4 + LineSeperator)) { return false; }
+            }
+
+            return writer.StopWriting();
         }
 
         private static bool IsSameOrbitItem(OrbitItem item, OrbitItem otherItem)
