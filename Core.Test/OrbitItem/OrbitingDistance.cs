@@ -24,7 +24,7 @@ namespace Core.Test.OrbitItem
         {
             const int goalValue = -5;
             sut.OrbitingId = 2;
-            int origionalValue = sut.OrbitingDistance;
+            long origionalValue = sut.OrbitingDistance;
 
             sut.OrbitingDistance = goalValue;
 
@@ -36,7 +36,7 @@ namespace Core.Test.OrbitItem
         {
             const int goalValue = 0;
             sut.OrbitingId = 2;
-            int origionalValue = sut.OrbitingDistance;
+            long origionalValue = sut.OrbitingDistance;
 
             sut.OrbitingDistance = goalValue;
 

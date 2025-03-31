@@ -134,6 +134,7 @@ namespace Core.Interfaces
         /// </summary>
         /// <returns></returns>
         public int GetAvailableId();
+        IEnumerable<int> GetAvailableId(int amountOfNumbers);
 
         /// <summary>
         /// returns the id of an item matching the given item with these values ignoring id and the OrbitingId

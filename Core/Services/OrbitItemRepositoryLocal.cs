@@ -282,6 +282,44 @@ namespace Core.Services
             return id;
         }
 
+        public IEnumerable<int> GetAvailableId(int amountOfNumbers)
+        {
+            List<int> toReturn = new();
+
+            for (int i = 0; i < amountOfNumbers; i++)
+            {
+                int id;
+                if (i == 0)
+                {
+                    id = 0;
+                }
+                else
+                {
+                    id = toReturn[i - 1];
+                }
+
+                bool idFree = false;
+
+                while (!idFree)
+                {
+                    id++;
+                    idFree = true;
+                    foreach (OrbitItem item in orbitItems)
+                    {
+                        if (item.Id == id)
+                        {
+                            idFree = false;
+                            break;
+                        }
+                    }
+                }
+
+                toReturn.Add(id);
+            }
+
+            return toReturn;
+        }
+
         public int? GetIdOf(OrbitItem item, bool checkOrbitingId)
         {
             foreach (var orbitItem in orbitItems)

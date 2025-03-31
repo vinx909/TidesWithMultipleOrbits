@@ -10,9 +10,9 @@ namespace Core.Entities
     {
         private int id = -1;
         private int orbitingId = -1;
-        private int mass = -1;
+        private double mass = -1;
         private int radius = -1;
-        private int orbitingDistance = -1;
+        private long orbitingDistance = -1;
         private int orbitPeriod = -1;
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Core.Entities
         /// <summary>
         /// mass in kg
         /// </summary>
-        public int Mass
+        public double Mass
         {
             get => mass;
             set 
@@ -84,7 +84,7 @@ namespace Core.Entities
         /// <summary>
         /// distance to the item it's orbiting in meters, must be greater then 0
         /// </summary>
-        public int OrbitingDistance
+        public long OrbitingDistance
         {
             get => orbitingDistance; 
             set 

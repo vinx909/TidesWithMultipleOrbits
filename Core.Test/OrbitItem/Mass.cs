@@ -21,7 +21,7 @@ namespace Core.Test.OrbitItem
         [Fact]
         public void CanNotBeChangedToNegativeInterger()
         {
-            int origionalValue = sut.Mass;
+            double origionalValue = sut.Mass;
             const int goalValue = -5;
 
             sut.Mass = goalValue;

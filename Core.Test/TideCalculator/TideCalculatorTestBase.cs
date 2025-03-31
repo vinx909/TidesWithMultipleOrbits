@@ -56,12 +56,12 @@ namespace Core.Test.TideCalculator
             SystemTwoOrbitItems = new List<Entities.OrbitItem>() { SystemTwoStar, SystemTwoSataliteOne, SystemTwoSataliteTwo, SystemTwoSubSataliteOne, SystemTwoSubSataliteTwo, SystemTwoSubSubSatalite };
         }
 
-        protected static double GetTidalForce(int excertingMass, int experiancerRadius, double distance)
+        protected static double GetTidalForce(double excertingMass, int experiancerRadius, double distance)
         {
             return 2 * gravitationalConstant * excertingMass * experiancerRadius / Math.Pow(distance, 3);
         }
 
-        protected static double GetTidalHeight(int excertingMass, int experiancerMass, int experiancerRadius, double distance)
+        protected static double GetTidalHeight(double excertingMass, double experiancerMass, int experiancerRadius, double distance)
         {
             return Math.Pow(experiancerRadius, 4) / Math.Pow(distance, 3) * excertingMass / experiancerMass;
         }

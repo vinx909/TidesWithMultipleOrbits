@@ -29,7 +29,7 @@ namespace Core.Services
 
         public TideCalculator(IOrbitItemsRepository orbitItemsRepository, IWriter writer)
         {
-            if(orbitItemsRepository == null || writer == null)
+            if (orbitItemsRepository == null || writer == null)
             {
                 if (orbitItemsRepository == null && writer == null)
                 {
@@ -54,14 +54,14 @@ namespace Core.Services
             int? atZeroDegreesId = orbitItemsRepository.GetIdOf(itemAtZeroDegrees);
             int? measureItemId = orbitItemsRepository.GetIdOf(measureItem);
 
-            if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId || atZeroDegreesId == measureItemId)
+            if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId)
             {
                 return incorrectAngle;
             }
 
             List<OrbitItem> items = GatherItems([(int)centralItemId, (int)atZeroDegreesId, (int)measureItemId]);
 
-            if(items == null || items.Count == 0) { return incorrectAngle; }
+            if (items == null || items.Count == 0) { return incorrectAngle; }
 
             Dictionary<int, (double, double)> coordiantes = GetCoordinates(items, time);
 
@@ -74,7 +74,7 @@ namespace Core.Services
             int? atZeroDegreesId = orbitItemsRepository.GetIdOf(itemAtZeroDegrees);
             int? measureItemId = orbitItemsRepository.GetIdOf(measuringItem);
 
-            if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId || atZeroDegreesId == measureItemId)
+            if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId)
             {
                 return (incorrectAngle, incorecctDistance);
             }
@@ -93,7 +93,7 @@ namespace Core.Services
                 return (incorrectAngle, incorecctDistance);
             }
 
-            return (angle,  distance);
+            return (angle, distance);
 
 
             throw new NotImplementedException();
@@ -132,13 +132,13 @@ namespace Core.Services
             foreach (OrbitItem item in items)
             {
                 //make sure every item eventually orbits an item that doesn't orbit
-                if(!(item.OrbitingId == 0 || FindOrigin(item.OrbitingId, item.Id)))
+                if (!(item.OrbitingId == 0 || FindOrigin(item.OrbitingId, item.Id)))
                 {
                     return false;
                 }
 
                 //make sure there's only one item that doesn't orbit
-                else if(item.OrbitingId == 0)
+                else if (item.OrbitingId == 0)
                 {
                     if (!orbitingIdZeroFound)
                     {
@@ -151,7 +151,7 @@ namespace Core.Services
                 }
 
                 //make sure there's no item with the same id or same value
-                foreach(OrbitItem otherItem in items)
+                foreach (OrbitItem otherItem in items)
                 {
                     if (item != otherItem)
                     {
@@ -170,14 +170,36 @@ namespace Core.Services
             //see if there are old items, and if so delete them
             foreach (OrbitItem item in orbitItemsRepository.GetAll())
             {
-                if(!orbitItemsRepository.Delete(item, true))
+                if (!orbitItemsRepository.Delete(item, true))
                 {
                     return false;
                 }
             }
 
             //add items
-            return orbitItemsRepository.Add(items);
+            Dictionary<int, int> oldAndNewId = new Dictionary<int, int>();
+            oldAndNewId.Add(0, 0);
+            IEnumerable<int> availableIds = orbitItemsRepository.GetAvailableId(items.Count());
+            foreach (OrbitItem item in items)
+            {
+                foreach (int id in availableIds)
+                {
+                    if (!oldAndNewId.ContainsValue(id))
+                    {
+                        oldAndNewId.Add(item.Id, id);
+                        break;
+                    }
+                }
+            }
+
+            OrbitItem[] copies = new OrbitItem[items.Count()];
+            int index = 0;
+            foreach (OrbitItem item in items)
+            {
+                copies[index++] = new() { Id = oldAndNewId[item.Id], Name = item.Name, OrbitingId = oldAndNewId[item.OrbitingId], Mass = item.Mass, Radius = item.Radius, OrbitingDistance = item.OrbitingDistance, OrbitPeriod = item.OrbitPeriod };
+            }
+
+            return orbitItemsRepository.Add(copies);
 
             bool FindOrigin(int id, int startId)
             {
@@ -276,14 +298,14 @@ namespace Core.Services
             int maximum = 1;
 
             IEnumerable<OrbitItem> items = orbitItemsRepository.GetAll();
-            if(items == null || !items.Any())
+            if (items == null || !items.Any())
             {
                 return (int)incorecctTime;
             }
 
             foreach (OrbitItem item in items)
             {
-                if (item.OrbitingId != 0)
+                if (item.OrbitingId != 0 && item.OrbitPeriod > 0)
                 {
                     maximum *= item.OrbitPeriod;
                     periods.Add(item.OrbitPeriod);
@@ -292,7 +314,7 @@ namespace Core.Services
             }
 
             //check if it's always the same due to either only 1 orbiting item or all orbits being the same
-            if(periods.Count < 2) 
+            if (periods.Count < 2)
             {
                 return 0;
             }
@@ -321,7 +343,7 @@ namespace Core.Services
                 }
 
                 bool allTheSameAngle = true;
-                for(int j = 1; j < periods.Count; j++)
+                for (int j = 1; j < periods.Count; j++)
                 {
                     if (Angles[0] != Angles[j])
                     {
@@ -351,7 +373,20 @@ namespace Core.Services
             {
                 if (item != trueExperiencer)
                 {
-                    forcesAndAngles[index] = (GetTidalForce(trueExperiencer, item, GetDistance(coordinates, trueExperiencer.Id, item.Id)), CorrectAngle(GetAngle(coordinates, trueExperiencer.Id, itemAtZeroDegrees.Id, item.Id)));
+                    double angle;
+                    if (item.Id == itemAtZeroDegrees.Id)
+                    {
+                        angle = 0;
+                    }
+                    else
+                    {
+                        angle = GetAngle(coordinates, trueExperiencer.Id, itemAtZeroDegrees.Id, item.Id);
+                        if (double.IsNaN(angle))
+                        {
+                            angle = 0;
+                        }
+                    }
+                    forcesAndAngles[index] = (GetTidalForce(trueExperiencer, item, GetDistance(coordinates, trueExperiencer.Id, item.Id)), CorrectAngle(angle));
                     index++;
                 }
             }
@@ -377,7 +412,20 @@ namespace Core.Services
             {
                 if (item != trueExperiencer)
                 {
-                    heightAndAngles[index] = (GetTidalRange(trueExperiencer, item, GetDistance(coordinates, trueExperiencer.Id, item.Id)) / 1.5, CorrectAngle(GetAngle(coordinates, trueExperiencer.Id, itemAtZeroDegrees.Id, item.Id)));
+                    double angle;
+                    if (item.Id == itemAtZeroDegrees.Id)
+                    {
+                        angle = 0;
+                    }
+                    else
+                    {
+                        angle = GetAngle(coordinates, trueExperiencer.Id, itemAtZeroDegrees.Id, item.Id);
+                        if (double.IsNaN(angle))
+                        {
+                            angle = 0;
+                        }
+                    }
+                    heightAndAngles[index] = (GetTidalRange(trueExperiencer, item, GetDistance(coordinates, trueExperiencer.Id, item.Id)) / 1.5, CorrectAngle(angle));
                     index++;
                 }
             }
@@ -392,19 +440,19 @@ namespace Core.Services
 
         public bool WriteAngleToFile(OrbitItem centralItem, OrbitItem itemAtZeroDegrees, OrbitItem measureItem, int initialTime, int finalTime, int timesteps)
         {
-            if(!CanStartWriting()) {return false;}
+            if (!CanStartWriting()) { return false; }
 
             int? centralItemId = orbitItemsRepository.GetIdOf(centralItem);
             int? atZeroDegreesId = orbitItemsRepository.GetIdOf(itemAtZeroDegrees);
             int? measureItemId = orbitItemsRepository.GetIdOf(measureItem);
 
-            if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId || atZeroDegreesId == measureItemId) { return false; }
+            if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId) { return false; }
 
             List<OrbitItem> items = GatherItems([(int)centralItemId, (int)atZeroDegreesId, (int)measureItemId]);
 
             if (items == null || items.Count == 0) { return false; }
 
-            if (!writer.StartWriting(path)) {  return false; }
+            if (!writer.StartWriting(path)) { return false; }
 
             Dictionary<int, (double, double)> coordinates;
 
@@ -414,7 +462,7 @@ namespace Core.Services
             {
                 coordinates = GetCoordinates(items, time);
 
-                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetAngle(coordinates, (int)centralItemId, (int)atZeroDegreesId, (int)measureItemId) + LineSeperator)) {  return false; }
+                if (!writer.Write(time.ToString("D" + timeLength) + FieldSepertor + GetAngle(coordinates, (int)centralItemId, (int)atZeroDegreesId, (int)measureItemId) + LineSeperator)) { return false; }
             }
 
             return writer.StopWriting();
@@ -428,7 +476,7 @@ namespace Core.Services
             int? atZeroDegreesId = orbitItemsRepository.GetIdOf(itemAtZeroDegrees);
             int? measureItemId = orbitItemsRepository.GetIdOf(measuringItem);
 
-            if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId || atZeroDegreesId == measureItemId) { return false; }
+            if (centralItemId == null || atZeroDegreesId == null || measureItemId == null || centralItemId == atZeroDegreesId || centralItemId == measureItemId) { return false; }
 
             List<OrbitItem> items = GatherItems([(int)centralItemId, (int)atZeroDegreesId, (int)measureItemId]);
 
@@ -449,7 +497,7 @@ namespace Core.Services
 
             return writer.StopWriting();
         }
-        
+
         public bool WriteDistanceBetweenToFile(OrbitItem ItemOne, OrbitItem ItemTwo, int initialTime, int finalTime, int timesteps)
         {
             if (!CanStartWriting()) { return false; }
@@ -499,7 +547,28 @@ namespace Core.Services
                 {
                     if (item != trueExperiencer)
                     {
-                        forcesAndAngles[index] = (GetTidalForce(trueExperiencer, item, GetDistance(coordinates, trueExperiencer.Id, item.Id)), CorrectAngle(GetAngle(coordinates, trueExperiencer.Id, itemAtZeroDegrees.Id, item.Id)));
+                        double angle;
+                        if (item.Id == itemAtZeroDegrees.Id)
+                        {
+                            angle = 0;
+                        }
+                        else
+                        {
+                            angle = GetAngle(coordinates, trueExperiencer.Id, itemAtZeroDegrees.Id, item.Id);
+                            if (double.IsNaN(angle))
+                            {
+                                angle = 0;
+                            }
+                        }
+                        try
+                        {
+                            angle = CorrectAngle(angle);
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                        forcesAndAngles[index] = (GetTidalForce(trueExperiencer, item, GetDistance(coordinates, trueExperiencer.Id, item.Id)), CorrectAngle(angle));
                         index++;
                     }
                 }
@@ -532,7 +601,20 @@ namespace Core.Services
                 {
                     if (item != trueExperiencer)
                     {
-                        heightAndAngles[index] = (GetTidalRange(trueExperiencer, item, GetDistance(coordinates, trueExperiencer.Id, item.Id)) / 1.5, CorrectAngle(GetAngle(coordinates, trueExperiencer.Id, itemAtZeroDegrees.Id, item.Id)));
+                        double angle;
+                        if (item.Id == itemAtZeroDegrees.Id)
+                        {
+                            angle = 0;
+                        }
+                        else
+                        {
+                            angle = GetAngle(coordinates, trueExperiencer.Id, itemAtZeroDegrees.Id, item.Id);
+                            if (double.IsNaN(angle))
+                            {
+                                angle = 0;
+                            }
+                        }
+                        heightAndAngles[index] = (GetTidalRange(trueExperiencer, item, GetDistance(coordinates, trueExperiencer.Id, item.Id)) / 1.5, CorrectAngle(angle));
                         index++;
                     }
                 }
@@ -545,6 +627,7 @@ namespace Core.Services
             return writer.StopWriting();
         }
 
+        #region private functions
         private static bool IsSameOrbitItem(OrbitItem item, OrbitItem otherItem)
         {
             return item.Name.Equals(otherItem.Name) && item.Mass == otherItem.Mass && item.Radius == otherItem.Radius && item.OrbitingDistance == otherItem.OrbitingDistance && item.OrbitPeriod == otherItem.OrbitPeriod;
@@ -567,10 +650,17 @@ namespace Core.Services
                         }
                         else if (coordinates.TryGetValue(items[i].OrbitingId, out (double, double) orbitedCoordiates))
                         {
-                            double x = orbitedCoordiates.Item1 + items[i].OrbitingDistance * Math.Cos(2.0 * time / items[i].OrbitPeriod * Math.PI);
-                            double y = orbitedCoordiates.Item2 + items[i].OrbitingDistance * Math.Sin(2.0 * time / items[i].OrbitPeriod * Math.PI);
-                            coordinates.Add(items[i].Id, (x, y));
-                        } 
+                            if (items[i].OrbitPeriod == 0)
+                            {
+                                coordinates.Add(items[i].Id, (orbitedCoordiates.Item1 + items[i].OrbitingDistance, orbitedCoordiates.Item2));
+                            }
+                            else
+                            {
+                                double x = orbitedCoordiates.Item1 + items[i].OrbitingDistance * Math.Cos(2.0 * time / items[i].OrbitPeriod * Math.PI);
+                                double y = orbitedCoordiates.Item2 + items[i].OrbitingDistance * Math.Sin(2.0 * time / items[i].OrbitPeriod * Math.PI);
+                                coordinates.Add(items[i].Id, (x, y));
+                            }
+                        }
                     }
                 }
 
@@ -593,18 +683,7 @@ namespace Core.Services
         {
             (double, double) vectorOne = (coordinates[atZeroId].Item1 - coordinates[centralId].Item1, coordinates[atZeroId].Item2 - coordinates[centralId].Item2);
             (double, double) vectorTwo = (coordinates[measureId].Item1 - coordinates[centralId].Item1, coordinates[measureId].Item2 - coordinates[centralId].Item2);
-            return GetAngle(vectorOne, vectorTwo);
-        }
 
-        private static double GetAngle(Dictionary<int, (double, double)> coordinates, int centralId, int atZeroId, (double, double) vectorTwo)
-        {
-            (double, double) vectorOne = (coordinates[atZeroId].Item1 - coordinates[centralId].Item1, coordinates[atZeroId].Item2 - coordinates[centralId].Item2);
-
-            return GetAngle(vectorOne, vectorTwo);
-        }
-
-        private static double GetAngle((double, double) vectorOne, (double, double) vectorTwo)
-        {
             double vectorOneTimesVectorTwo = vectorOne.Item1 * vectorTwo.Item1 + vectorOne.Item2 * vectorTwo.Item2;
             double absoluteVectorOne = Math.Pow(Math.Pow(vectorOne.Item1, 2) + Math.Pow(vectorOne.Item2, 2), 0.5);
             double absoluteVectorTwo = Math.Pow(Math.Pow(vectorTwo.Item1, 2) + Math.Pow(vectorTwo.Item2, 2), 0.5);
@@ -674,9 +753,9 @@ namespace Core.Services
                 orbitItems.Add(orbitItemsRepository.Get(id));
             }
 
-            for (int i = 0; i<orbitItems.Count; i++)
+            for (int i = 0; i < orbitItems.Count; i++)
             {
-                if(orbitItems[i] == null)
+                if (orbitItems[i] == null)
                 {
                     return null;
                 }
@@ -684,9 +763,9 @@ namespace Core.Services
                 if (orbitItems[i].OrbitingId != 0)
                 {
                     bool orbitingIdAlreadyContains = false;
-                    for (int j = 0; j<orbitItems.Count; j++)
+                    for (int j = 0; j < orbitItems.Count; j++)
                     {
-                        if(i!=j && orbitItems[j].Id == orbitItems[i].OrbitingId)
+                        if (i != j && orbitItems[j].Id == orbitItems[i].OrbitingId)
                         {
                             orbitingIdAlreadyContains = true;
                             break;
@@ -719,7 +798,7 @@ namespace Core.Services
             }
             else
             {
-                throw new Exception("the program is trying to work with an angle of "+angle+" or "+angle/Math.PI+ "π that it should not be able to generate and can't propperly handle");
+                throw new Exception("the program is trying to work with an angle of " + angle + " or " + angle / Math.PI + "π that it should not be able to generate and can't propperly handle");
             }
         }
 
@@ -746,7 +825,6 @@ namespace Core.Services
 
                 for (int i = 1; i < totalAndAngles.Length; i++)
                 {
-                    //R = ((A·cos(α)+B·cos(β))2+(A·sin(α)+B·sin(β))2)1/2 
                     newcosMultiplier =
                         Math.Pow(
                             Math.Pow(cosMultiplier * Math.Cos(angleAddition) + totalAndAngles[i].Item1 * Math.Cos(totalAndAngles[i].Item2), 2) +
@@ -785,5 +863,6 @@ namespace Core.Services
         {
             return !string.IsNullOrEmpty(path) && !writer.IsWriting() && writer.CanWriteTo(path);
         }
+        #endregion
     }
 }

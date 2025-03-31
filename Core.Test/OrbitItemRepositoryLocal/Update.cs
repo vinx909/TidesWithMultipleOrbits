@@ -420,7 +420,9 @@ namespace Core.Test.OrbitItemRepositoryLocal
             Populate();
             Entities.OrbitItem targetOne = ContainingOrbiterSubSubOne;
             Entities.OrbitItem targetTwo = ContainingOrbiterSubOne;
-            Entities.OrbitItem[] toUpdate = { new() { Id = targetOne.Id, Name = targetOne.Name, OrbitingId = targetOne.OrbitingId, Mass = targetOne.Mass, Radius = targetOne.Radius, OrbitingDistance = targetOne.Mass, OrbitPeriod = targetOne.OrbitPeriod + 2 }, new() { Id = targetTwo.Id, Name = targetTwo.Name, OrbitingId = targetTwo.OrbitingId, Mass = targetTwo.Mass, Radius = targetTwo.Radius, OrbitingDistance = targetTwo.Mass, OrbitPeriod = targetTwo.OrbitPeriod + 3 } };
+            Entities.OrbitItem[] toUpdate = {
+                new() { Id = targetOne.Id, Name = targetOne.Name, OrbitingId = targetOne.OrbitingId, Mass = targetOne.Mass, Radius = targetOne.Radius, OrbitingDistance = targetOne.OrbitingDistance + 3, OrbitPeriod = targetOne.OrbitPeriod + 2 },
+                new() { Id = targetTwo.Id, Name = targetTwo.Name, OrbitingId = targetTwo.OrbitingId, Mass = targetTwo.Mass, Radius = targetTwo.Radius, OrbitingDistance = targetTwo.OrbitingDistance + 3, OrbitPeriod = targetTwo.OrbitPeriod + 3 } };
             Entities.OrbitItem[] results = new Entities.OrbitItem[toUpdate.Length];
 
             sut.Update(toUpdate);
